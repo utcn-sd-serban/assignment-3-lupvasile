@@ -1,4 +1,4 @@
-# Software Design - Assignment 2 ![Deadline 12.05.2019 23:59](https://img.shields.io/badge/deadline-12.05.2019%2023%3A59-blue.svg "Deadline: 12.05.2019 23:59")
+# Software Design - Assignment 3 ![Deadline 12.05.2019 23:59](https://img.shields.io/badge/deadline-12.05.2019%2023%3A59-blue.svg "Deadline: 12.05.2019 23:59")
 This is the third and last assignment of the software design laboratory.
 
 ## Resources
