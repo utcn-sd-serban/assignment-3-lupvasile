@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS`user` (
      `id` INT NOT NULL AUTO_INCREMENT,
      `username` VARCHAR(45) NOT NULL,
-     `password` VARCHAR(45) NOT NULL,
+     `password` VARCHAR(512) NOT NULL,
      `is_moderator` BIT(1) NOT NULL,
      `is_banned` BIT(1) NOT NULL,
      PRIMARY KEY (`id`));

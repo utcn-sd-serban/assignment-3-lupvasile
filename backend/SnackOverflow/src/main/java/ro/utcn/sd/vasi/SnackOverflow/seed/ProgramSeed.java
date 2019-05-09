@@ -2,9 +2,12 @@ package ro.utcn.sd.vasi.SnackOverflow.seed;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ro.utcn.sd.vasi.SnackOverflow.model.Question;
@@ -28,6 +31,7 @@ public class ProgramSeed implements CommandLineRunner {
     private final RepositoryFactory factory;
     private final QuestionManagementService questionManagementService;
     private final AnswerManagementService answerManagementService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -40,10 +44,10 @@ public class ProgramSeed implements CommandLineRunner {
     private void addUsers(){
         UserRepository repository = factory.createUserRepository();
         if(repository.findAll().isEmpty()) {
-            repository.save(new User(null, "u1","pass",0,false,false));
-            repository.save(new User(null, "u2","pass",0,true,false));
-            repository.save(new User(null, "u3","pass",0,false,false));
-            repository.save(new User(null, "u4","pass",0,false,true));
+            repository.save(new User(null, "u1",passwordEncoder.encode("pass"),0,false,false));
+            repository.save(new User(null, "u2",passwordEncoder.encode("pass"),0,true,false));
+            repository.save(new User(null, "u3",passwordEncoder.encode("pass"),0,false,false));
+            repository.save(new User(null, "u4",passwordEncoder.encode("pass"),0,false,true));
         }
     }
 

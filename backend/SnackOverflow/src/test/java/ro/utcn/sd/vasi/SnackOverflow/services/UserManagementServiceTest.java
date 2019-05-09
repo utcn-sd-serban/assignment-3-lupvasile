@@ -1,6 +1,8 @@
 package ro.utcn.sd.vasi.SnackOverflow.services;
 
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ro.utcn.sd.vasi.SnackOverflow.data_assembler.AssemblerFactory;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
 import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
@@ -16,11 +18,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 public class UserManagementServiceTest {
+    private static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     private static RepositoryFactory createMockedFactory() {
         RepositoryFactory factory = new AssemblerFactory(new InMemoryRepositoryFactory());
-        factory.createUserRepository().save(new User(null,"u1","pass",0,false,false));
-        factory.createUserRepository().save(new User(null,"moderatorUser","pass",0,true,false));
-        factory.createUserRepository().save(new User(null,"blockedUser","pass",0,false,true));
+        String pass = passwordEncoder.encode("pass");
+        factory.createUserRepository().save(new User(null,"u1",pass,0,false,false));
+        factory.createUserRepository().save(new User(null,"moderatorUser",pass,0,true,false));
+        factory.createUserRepository().save(new User(null,"blockedUser",pass,0,false,true));
 
         return factory;
     }
@@ -30,7 +35,7 @@ public class UserManagementServiceTest {
         RepositoryFactory factory = createMockedFactory();
         UserManagementService service = new UserManagementService(factory);
 
-        Optional<User> user = service.getLogin("u1","pass");
+        Optional<User> user = service.getLogin("u1","pass",passwordEncoder);
         assertEquals(new Integer(1),user.get().getId());
     }
 
@@ -39,7 +44,7 @@ public class UserManagementServiceTest {
         RepositoryFactory factory = createMockedFactory();
         UserManagementService service = new UserManagementService(factory);
 
-        Optional<User> user = service.getLogin("u1111","pass");
+        Optional<User> user = service.getLogin("u1111","pass",passwordEncoder);
         assertFalse(user.isPresent());
     }
 
@@ -49,7 +54,7 @@ public class UserManagementServiceTest {
         UserManagementService service = new UserManagementService(factory);
 
         service.banUser(2,1);
-        User user = service.getLogin("u1","pass").get();
+        User user = service.getLogin("u1","pass",passwordEncoder).get();
         assertTrue(user.getIsBlocked());
     }
 

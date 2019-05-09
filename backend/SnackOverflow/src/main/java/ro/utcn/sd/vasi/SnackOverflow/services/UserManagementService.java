@@ -1,6 +1,11 @@
 package ro.utcn.sd.vasi.SnackOverflow.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
@@ -9,18 +14,19 @@ import ro.utcn.sd.vasi.SnackOverflow.model.User;
 import ro.utcn.sd.vasi.SnackOverflow.model.UserData;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.RepositoryFactory;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service(value = "UserlManagementServiceOld")
 @RequiredArgsConstructor
-public class UserManagementService {
+public class UserManagementService implements UserDetailsService {
     private final RepositoryFactory repositoryFactory;
 
     @Transactional
-    public Optional<User> getLogin(String username, String password) {
+    public Optional<User> getLogin(String username, String password, PasswordEncoder passwordEncoder) {
         for(User u : repositoryFactory.createUserRepository().findAll()) {
             if(u.getUsername().equals(username)) {
-                if(u.getPassword().equals(password))
+                if(passwordEncoder.matches(password,u.getPassword()))
                     return Optional.ofNullable(u);
                 else return Optional.empty();
             }
@@ -53,5 +59,14 @@ public class UserManagementService {
         toBeBannedUser.setIsBlocked(banStatus);
 
         repositoryFactory.createUserRepository().save(toBeBannedUser);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = repositoryFactory.createUserRepository().findAll().stream().filter(u->u.getUsername().equals(username)).findAny()
+                .orElseThrow(() -> new UsernameNotFoundException("Unknown user"));
+        ///good place to return roles!!!
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }

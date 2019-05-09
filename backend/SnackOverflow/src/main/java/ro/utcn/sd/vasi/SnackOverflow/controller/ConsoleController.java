@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
 import ro.utcn.sd.vasi.SnackOverflow.model.Question;
@@ -25,6 +26,7 @@ public class ConsoleController implements CommandLineRunner {
     private final QuestionManagementService questionManagementService;
     private final UserManagementService userManagementService;
     private final List<CommandHandler> commandHandlers = new ArrayList<>();
+    private final PasswordEncoder passwordEncoder;
     private User currentUser;
 
     private void addHandlers() {
@@ -79,7 +81,7 @@ public class ConsoleController implements CommandLineRunner {
             String password = scanner.next().trim();
             scanner.nextLine();
 
-            currentUser = userManagementService.getLogin(username,password).orElse(null);
+            currentUser = userManagementService.getLogin(username,password,passwordEncoder).orElse(null);
             if(currentUser == null) {
                 print("wrong login data");
             }
