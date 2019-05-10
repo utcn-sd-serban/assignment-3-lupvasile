@@ -24,6 +24,7 @@ public class QuestionDTO {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(question.getId());
         questionDTO.setAuthor(author);
+        questionDTO.setTitle(question.getTitle());
         questionDTO.setText(question.getText());
         questionDTO.setCreationDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm").format(question.getCreationDateTime()));
         questionDTO.setVoteCount(question.getVoteCount());
