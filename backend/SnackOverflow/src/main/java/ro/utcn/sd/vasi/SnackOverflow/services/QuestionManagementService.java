@@ -132,6 +132,10 @@ public class QuestionManagementService {
 
         repositoryFactory.createQuestionRepository().remove(question);
         eventPublisher.publishEvent(new QuestionDeletedEvent(questionId));
+        repositoryFactory.createQuestionVoteRepository().findAllVotesWithPostId(questionId)
+                .forEach(v -> eventPublisher.publishEvent(new UserUpdatedEvent(UserDTO.ofEntity(
+                        repositoryFactory.createUserRepository().findById(v.getCineDaId()).orElseThrow(UserNotFoundException::new)))));
+        eventPublisher.publishEvent(new UserUpdatedEvent(UserDTO.ofEntity(repositoryFactory.createUserRepository().findById(question.getAuthorId()).orElseThrow(UserNotFoundException::new))));
     }
 
     @Transactional
