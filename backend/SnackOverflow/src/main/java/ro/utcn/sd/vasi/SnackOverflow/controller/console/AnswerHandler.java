@@ -1,11 +1,8 @@
-package ro.utcn.sd.vasi.SnackOverflow.controller;
+package ro.utcn.sd.vasi.SnackOverflow.controller.console;
 
-import ro.utcn.sd.vasi.SnackOverflow.model.Question;
 import ro.utcn.sd.vasi.SnackOverflow.services.AnswerManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.QuestionManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.UserManagementService;
-
-import java.util.Scanner;
 
 public class AnswerHandler extends CommandHandler{
     public AnswerHandler(ConsoleController consoleController, AnswerManagementService answerManagementService, QuestionManagementService questionManagementService, UserManagementService userManagementService) {

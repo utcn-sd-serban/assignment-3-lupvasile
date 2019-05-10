@@ -1,4 +1,4 @@
-package ro.utcn.sd.vasi.SnackOverflow.controller;
+package ro.utcn.sd.vasi.SnackOverflow.controller.console;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -6,10 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
-import ro.utcn.sd.vasi.SnackOverflow.model.Question;
 import ro.utcn.sd.vasi.SnackOverflow.model.User;
-import ro.utcn.sd.vasi.SnackOverflow.model.UserData;
 import ro.utcn.sd.vasi.SnackOverflow.services.AnswerManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.QuestionManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.UserManagementService;

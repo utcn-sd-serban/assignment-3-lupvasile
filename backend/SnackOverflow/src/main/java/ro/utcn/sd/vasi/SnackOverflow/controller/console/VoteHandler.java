@@ -1,10 +1,8 @@
-package ro.utcn.sd.vasi.SnackOverflow.controller;
+package ro.utcn.sd.vasi.SnackOverflow.controller.console;
 
 import ro.utcn.sd.vasi.SnackOverflow.services.AnswerManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.QuestionManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.UserManagementService;
-
-import java.util.logging.ConsoleHandler;
 
 public class VoteHandler extends CommandHandler {
 

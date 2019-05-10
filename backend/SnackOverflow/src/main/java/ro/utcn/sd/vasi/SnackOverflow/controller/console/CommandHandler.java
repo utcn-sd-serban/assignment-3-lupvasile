@@ -1,4 +1,4 @@
-package ro.utcn.sd.vasi.SnackOverflow.controller;
+package ro.utcn.sd.vasi.SnackOverflow.controller.console;
 
 import org.springframework.stereotype.Component;
 import ro.utcn.sd.vasi.SnackOverflow.model.User;
