@@ -1,8 +1,14 @@
 package ro.utcn.sd.vasi.SnackOverflow.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.utcn.sd.vasi.SnackOverflow.dto.AnswerDTO;
+import ro.utcn.sd.vasi.SnackOverflow.event.AnswerCreatedEvent;
+import ro.utcn.sd.vasi.SnackOverflow.event.AnswerDeletedEvent;
+import ro.utcn.sd.vasi.SnackOverflow.event.AnswerUpdatedEvent;
+import ro.utcn.sd.vasi.SnackOverflow.event.VotedAnswerEvent;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.AnswerNotFoundException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.QuestionNotFoundException;
@@ -18,16 +24,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AnswerManagementService {
     private final RepositoryFactory repositoryFactory;
+    private final ApplicationEventPublisher eventPublisher;
+    private final ServiceHelper serviceHelper;
 
     @Transactional
-    public List<Answer> listAnswersForQuestion(int questionId) {
-        /*Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElse(null);
-        if(question == null) {
-            return new ArrayList<>();
-        }*/
+    public List<AnswerDTO> listAnswersForQuestion(int questionId) {
         Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
-        return repositoryFactory.createAnswerRepository().findAllbyQuestionId(questionId).stream().sorted(Comparator.comparing(Answer::getVoteCount).reversed()).collect(Collectors.toList());
+        return repositoryFactory.createAnswerRepository().findAllbyQuestionId(questionId).stream()
+                .sorted(Comparator.comparing(Answer::getVoteCount).reversed())
+                .map(serviceHelper::getAnswerDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -42,28 +49,39 @@ public class AnswerManagementService {
         currVote.setValue(value);
 
         repositoryFactory.createAnswerVoteRepository().save(currVote);
+
+        eventPublisher.publishEvent(new VotedAnswerEvent(serviceHelper.getAnswerDTO(
+                repositoryFactory.createAnswerRepository().findById(answer.getId()).orElseThrow(AnswerNotFoundException::new))));
         return true;
     }
 
     @Transactional
-    public Answer addAnswer(int userId, int questionId, String text) {
+    public AnswerDTO addAnswer(int userId, int questionId, String text) {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         if(user.getIsBlocked()) return null;
 
         Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
-        return repositoryFactory.createAnswerRepository().save(new Answer(userId,text,ZonedDateTime.now(),questionId,0));
+        AnswerDTO answerDTO = serviceHelper.getAnswerDTO(
+                repositoryFactory.createAnswerRepository().save(new Answer(userId,text,ZonedDateTime.now(),questionId,0)));
+
+        eventPublisher.publishEvent(new AnswerCreatedEvent(answerDTO));
+        return answerDTO;
     }
 
     @Transactional
-    public void updateAnswerText(int userId, int answerId, String newText) {
+    public AnswerDTO updateAnswerText(int userId, int answerId, String newText) {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         Answer answer = repositoryFactory.createAnswerRepository().findById(answerId).orElseThrow(AnswerNotFoundException::new);
 
         if(!answer.getAuthorId().equals(user.getId()) && !user.getIsModerator()) throw new NotEnoughPermissionsException();
 
         answer.setText(newText);
-        repositoryFactory.createAnswerRepository().save(answer);
+        AnswerDTO answerDTO = serviceHelper.getAnswerDTO(
+                repositoryFactory.createAnswerRepository().save(answer));
+
+        eventPublisher.publishEvent(new AnswerUpdatedEvent(answerDTO));
+        return answerDTO;
     }
 
     @Transactional
@@ -74,5 +92,6 @@ public class AnswerManagementService {
         if(!answer.getAuthorId().equals(user.getId()) && !user.getIsModerator()) throw new NotEnoughPermissionsException();
 
         repositoryFactory.createAnswerRepository().remove(answer);
+        eventPublisher.publishEvent(new AnswerDeletedEvent(answerId));
     }
 }

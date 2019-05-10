@@ -2,6 +2,9 @@ package ro.utcn.sd.vasi.SnackOverflow.controller.console;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import ro.utcn.sd.vasi.SnackOverflow.dto.AnswerDTO;
+import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
+import ro.utcn.sd.vasi.SnackOverflow.dto.UserDTO;
 import ro.utcn.sd.vasi.SnackOverflow.model.*;
 import ro.utcn.sd.vasi.SnackOverflow.services.AnswerManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.QuestionManagementService;
@@ -47,10 +50,10 @@ public class QuestionHandler extends CommandHandler{
     }
 
     private void handleListQuestions() {
-        List<Question> questions = questionManagementService.listQuestions();
+        List<QuestionDTO> questions = questionManagementService.listQuestions();
         questionManagementService.listQuestions().forEach(x->{
-            UserData user = userManagementService.getUserData(x.getAuthorId()).orElse(null);
-            print(x.toStringNoText() + " author: " + user.getUsername() + " score: " + user.getScore());});
+            UserDTO user = x.getAuthor();
+            print(x.toString() + " author: " + user.getUsername() + " score: " + user.getScore());});
     }
 
     private void handleAddQuestion() {
@@ -76,11 +79,11 @@ public class QuestionHandler extends CommandHandler{
         String tagStr = scanner.nextLine().trim();
         Set<Tag> tags = new TreeSet<>(Arrays.asList(tagStr.toLowerCase().split(",")).stream().map(x->new Tag(x)).collect(Collectors.toList()));
 
-        List<Question> questions = questionManagementService.filterQuestionsByTag(tags);
+        List<QuestionDTO> questions = questionManagementService.filterQuestionsByTag(tags);
 
         questions.forEach(x->{
-            UserData user = userManagementService.getUserData(x.getAuthorId()).orElse(null);
-            print(x.toStringNoText() + " author: " + user.getUsername() + " score: " + user.getScore());});
+            UserDTO user = x.getAuthor();
+            print(x.toString() + " author: " + user.getUsername() + " score: " + user.getScore());});
 
         if(questions.isEmpty()) print("No questions");
     }
@@ -89,10 +92,10 @@ public class QuestionHandler extends CommandHandler{
         print("Please input the title");
         String title = scanner.nextLine().trim();
 
-        List<Question> questions = questionManagementService.filterQuestionsByTitle(title);
+        List<QuestionDTO> questions = questionManagementService.filterQuestionsByTitle(title);
         questions.forEach(x->{
-            UserData user = userManagementService.getUserData(x.getAuthorId()).orElse(null);
-            print(x.toStringNoText() + " author: " + user.getUsername() + " score: " + user.getScore());});
+            UserDTO user = x.getAuthor();
+            print(x.toString() + " author: " + user.getUsername() + " score: " + user.getScore());});
 
         if(questions.isEmpty()) print("No questions");
     }
@@ -102,14 +105,14 @@ public class QuestionHandler extends CommandHandler{
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        Question question = questionManagementService.getQuestion(id);
-        UserData userQ = userManagementService.getUserData(question.getAuthorId()).orElse(null);
+        QuestionDTO question = questionManagementService.getQuestion(id);
+        UserDTO userQ = question.getAuthor();
         print(question.toString() + " author: " + userQ.getUsername() + " score: " + userQ.getScore());
 
-        List<Answer> ans = answerManagementService.listAnswersForQuestion(id);
+        List<AnswerDTO> ans = answerManagementService.listAnswersForQuestion(id);
         if(ans.isEmpty()) print("No answers");
         else ans.forEach(x->{
-            UserData user = userManagementService.getUserData(x.getAuthorId()).orElse(null);
+            UserDTO user = x.getAuthor();
             print(x.toString() + " author: " + user.getUsername() + " score: " + user.getScore());});
     }
 

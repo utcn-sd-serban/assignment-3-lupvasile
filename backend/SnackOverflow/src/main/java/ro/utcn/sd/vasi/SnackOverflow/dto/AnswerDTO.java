@@ -16,10 +16,10 @@ public class AnswerDTO {
     private int voteCount;
 
     //I think is wrong to use repositorty here for getting author from answer.getAuthorId()
-    private static AnswerDTO ofEntity(Answer answer, User author) {
+    public static AnswerDTO ofEntity(Answer answer, UserDTO author) {
         AnswerDTO answerDTO = new AnswerDTO();
         answerDTO.setId(answer.getId());
-        answerDTO.setAuthor(UserDTO.ofEntity(author));
+        answerDTO.setAuthor(author);
         answerDTO.setText(answer.getText());
         answerDTO.setCreationDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm").format(answer.getCreationDateTime()));
         answerDTO.setQuestionId(answer.getQuestionId());

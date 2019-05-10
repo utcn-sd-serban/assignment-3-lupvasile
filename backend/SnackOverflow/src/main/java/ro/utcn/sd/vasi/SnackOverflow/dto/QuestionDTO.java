@@ -20,10 +20,10 @@ public class QuestionDTO {
     private List<String> tags;
     private int voteCount;
 
-    private static QuestionDTO ofEntity(Question question, User author) {
+    public static QuestionDTO ofEntity(Question question, UserDTO author) {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setId(question.getId());
-        questionDTO.setAuthor(UserDTO.ofEntity(author));
+        questionDTO.setAuthor(author);
         questionDTO.setText(question.getText());
         questionDTO.setCreationDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm").format(question.getCreationDateTime()));
         questionDTO.setVoteCount(question.getVoteCount());

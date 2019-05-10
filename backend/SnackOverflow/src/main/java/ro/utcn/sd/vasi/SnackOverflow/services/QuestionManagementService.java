@@ -2,7 +2,14 @@ package ro.utcn.sd.vasi.SnackOverflow.services;
 
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Not;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
+import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
+import ro.utcn.sd.vasi.SnackOverflow.event.QuestionDeletedEvent;
+import ro.utcn.sd.vasi.SnackOverflow.event.QuestionUpdatedEvent;
+import ro.utcn.sd.vasi.SnackOverflow.event.QuestionCreatedEvent;
+import ro.utcn.sd.vasi.SnackOverflow.event.VotedQuestionEvent;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughTagsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.QuestionNotFoundException;
@@ -25,25 +32,32 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuestionManagementService {
     private final RepositoryFactory repositoryFactory;
+    private final ApplicationEventPublisher eventPublisher;
+    private final ServiceHelper serviceHelper;
 
     @Transactional
-    public List<Question> listQuestions() {
-        return repositoryFactory.createQuestionRepository().findAll().stream().sorted(Comparator.comparing(Question::getCreationDateTime).reversed()).collect(Collectors.toList());
+    public List<QuestionDTO> listQuestions() {
+        return repositoryFactory.createQuestionRepository().findAll().stream().sorted(Comparator.comparing(Question::getCreationDateTime).reversed())
+                .map(serviceHelper::getQuestionDTO)
+                .collect(Collectors.toList());
     }
 
-
     @Transactional
-    public List<Question> filterQuestionsByTag(Set<Tag> tags) {
+    public List<QuestionDTO> filterQuestionsByTag(Set<Tag> tags) {
         return repositoryFactory.createQuestionRepository().findAll().stream()
                 .filter(x->x.getTags().containsAll(tags))
-                .sorted(Comparator.comparing(Question::getCreationDateTime).reversed()).collect(Collectors.toList());
+                .sorted(Comparator.comparing(Question::getCreationDateTime).reversed())
+                .map(serviceHelper::getQuestionDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public List<Question> filterQuestionsByTitle(String titlePattern) {
+    public List<QuestionDTO> filterQuestionsByTitle(String titlePattern) {
         return repositoryFactory.createQuestionRepository().findAll().stream()
                 .filter(x->x.getTitle().contains(titlePattern))
-                .sorted(Comparator.comparing(Question::getCreationDateTime).reversed()).collect(Collectors.toList());
+                .sorted(Comparator.comparing(Question::getCreationDateTime).reversed())
+                .map(serviceHelper::getQuestionDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -55,13 +69,18 @@ public class QuestionManagementService {
      * @return
      */
     @Transactional
-    public Question addQuestion(int userId, String title, String text, Set<Tag> tags) {
+    public QuestionDTO addQuestion(int userId, String title, String text, Set<Tag> tags) {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         if(user.getIsBlocked()) throw new NotEnoughPermissionsException();
         if(tags.isEmpty()) throw new NotEnoughTagsException();
 
         tags = saveQuestionTags(tags);
-        return repositoryFactory.createQuestionRepository().save(new Question(userId,title,text, ZonedDateTime.now(), tags,0));
+
+        QuestionDTO questionDTO = serviceHelper.getQuestionDTO(
+                repositoryFactory.createQuestionRepository().save(new Question(userId,title,text, ZonedDateTime.now(), tags,0)));
+
+        eventPublisher.publishEvent(new QuestionCreatedEvent(questionDTO));
+        return questionDTO;
     }
 
     @Transactional
@@ -76,16 +95,19 @@ public class QuestionManagementService {
         currVote.setValue(value);
 
         repositoryFactory.createQuestionVoteRepository().save(currVote);
+
+        eventPublisher.publishEvent(new VotedQuestionEvent(serviceHelper.getQuestionDTO(
+                repositoryFactory.createQuestionRepository().findById(question.getId()).orElseThrow(QuestionNotFoundException::new))));
         return true;
     }
 
     @Transactional
-    public Set<Tag> listAllTags() {
-        return repositoryFactory.createTagRepository().findAll().stream().collect(Collectors.toSet());
+    public List<String> listAllTags() {
+        return repositoryFactory.createTagRepository().findAll().stream().map(Object::toString).collect(Collectors.toList());
     }
 
     @Transactional
-    public void updateQuestion(int userId, int questionId, String newTitle, String newText) {
+    public QuestionDTO updateQuestion(int userId, int questionId, String newTitle, String newText) {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QueryTimeoutException::new);
 
@@ -94,7 +116,11 @@ public class QuestionManagementService {
         question.setTitle(newTitle);
         question.setText(newText);
 
-        repositoryFactory.createQuestionRepository().save(question);
+        QuestionDTO questionDTO = serviceHelper.getQuestionDTO(
+                repositoryFactory.createQuestionRepository().save(question));
+
+        eventPublisher.publishEvent(new QuestionUpdatedEvent(questionDTO));
+        return questionDTO;
     }
 
     @Transactional
@@ -105,11 +131,12 @@ public class QuestionManagementService {
         if(!question.getAuthorId().equals(user.getId()) && !user.getIsModerator()) throw new NotEnoughPermissionsException();
 
         repositoryFactory.createQuestionRepository().remove(question);
+        eventPublisher.publishEvent(new QuestionDeletedEvent(questionId));
     }
 
     @Transactional
-    public Question getQuestion(int questionId){
-        return repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new);
+    public QuestionDTO getQuestion(int questionId){
+        return serviceHelper.getQuestionDTO(repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new));
     }
 
     @Transactional
@@ -122,7 +149,7 @@ public class QuestionManagementService {
             t.setId(null);
             repositoryFactory.createTagRepository().save(t);});
 
-        newTags = new HashSet<Tag>(repositoryFactory.createTagRepository().findAll());
+        newTags = new HashSet<>(repositoryFactory.createTagRepository().findAll());
         newTags.retainAll(tags);
         return newTags;
     }

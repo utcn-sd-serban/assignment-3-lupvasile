@@ -8,10 +8,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.utcn.sd.vasi.SnackOverflow.dto.UserDTO;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.UserNotFoundException;
 import ro.utcn.sd.vasi.SnackOverflow.model.User;
-import ro.utcn.sd.vasi.SnackOverflow.model.UserData;
+
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.RepositoryFactory;
 
 import java.util.Collections;
@@ -36,11 +37,10 @@ public class UserManagementService implements UserDetailsService {
     }
 
     @Transactional
-    public Optional<UserData> getUserData(int userId) {
-        User optUser = repositoryFactory.createUserRepository().findById(userId).orElse(null);
-        if(optUser == null) return Optional.empty();
+    public UserDTO getUserDTO(int userId) {
+        User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
 
-        return Optional.of(new UserData(optUser));
+        return UserDTO.ofEntity(user);
     }
 
     @Transactional
