@@ -93,7 +93,7 @@ public class AnswerManagementService {
 
         repositoryFactory.createAnswerRepository().remove(answer);
         eventPublisher.publishEvent(new AnswerDeletedEvent(answerId));
-        repositoryFactory.createQuestionVoteRepository().findAllVotesWithPostId(answerId)
+        repositoryFactory.createAnswerVoteRepository().findAllVotesWithPostId(answerId)
                 .forEach(v -> eventPublisher.publishEvent(new UserUpdatedEvent(UserDTO.ofEntity(
                         repositoryFactory.createUserRepository().findById(v.getCineDaId()).orElseThrow(UserNotFoundException::new)))));
         eventPublisher.publishEvent(new UserUpdatedEvent(UserDTO.ofEntity(repositoryFactory.createUserRepository().findById(answer.getAuthorId()).orElseThrow(UserNotFoundException::new))));
