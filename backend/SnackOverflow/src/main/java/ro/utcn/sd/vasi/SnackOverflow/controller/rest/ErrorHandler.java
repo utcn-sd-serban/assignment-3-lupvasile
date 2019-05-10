@@ -1,4 +1,4 @@
-package ro.utcn.sd.vasi.SnackOverflow.controller;
+package ro.utcn.sd.vasi.SnackOverflow.controller.rest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

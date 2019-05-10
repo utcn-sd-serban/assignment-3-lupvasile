@@ -1,6 +1,7 @@
 package ro.utcn.sd.vasi.SnackOverflow.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,8 +16,7 @@ import ro.utcn.sd.vasi.SnackOverflow.model.User;
 
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.RepositoryFactory;
 
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
 @Service(value = "UserlManagementServiceOld")
 @RequiredArgsConstructor
@@ -66,7 +66,10 @@ public class UserManagementService implements UserDetailsService {
         User user = repositoryFactory.createUserRepository().findAll().stream().filter(u->u.getUsername().equals(username)).findAny()
                 .orElseThrow(() -> new UsernameNotFoundException("Unknown user"));
         ///good place to return roles!!!
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+
+        if(!user.getIsBlocked()) grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if(user.getIsModerator()) grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_MODERATOR"));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 }
