@@ -6,10 +6,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
 import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
-import ro.utcn.sd.vasi.SnackOverflow.event.QuestionDeletedEvent;
-import ro.utcn.sd.vasi.SnackOverflow.event.QuestionUpdatedEvent;
-import ro.utcn.sd.vasi.SnackOverflow.event.QuestionCreatedEvent;
-import ro.utcn.sd.vasi.SnackOverflow.event.VotedQuestionEvent;
+import ro.utcn.sd.vasi.SnackOverflow.dto.UserDTO;
+import ro.utcn.sd.vasi.SnackOverflow.event.*;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughTagsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.QuestionNotFoundException;
@@ -98,6 +96,8 @@ public class QuestionManagementService {
 
         eventPublisher.publishEvent(new VotedQuestionEvent(serviceHelper.getQuestionDTO(
                 repositoryFactory.createQuestionRepository().findById(question.getId()).orElseThrow(QuestionNotFoundException::new))));
+        eventPublisher.publishEvent(new UserUpdatedEvent(UserDTO.ofEntity(repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new))));
+        eventPublisher.publishEvent(new UserUpdatedEvent(UserDTO.ofEntity(repositoryFactory.createUserRepository().findById(question.getAuthorId()).orElseThrow(UserNotFoundException::new))));
         return true;
     }
 

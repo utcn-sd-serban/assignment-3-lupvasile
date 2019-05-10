@@ -5,10 +5,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.utcn.sd.vasi.SnackOverflow.dto.AnswerDTO;
-import ro.utcn.sd.vasi.SnackOverflow.event.AnswerCreatedEvent;
-import ro.utcn.sd.vasi.SnackOverflow.event.AnswerDeletedEvent;
-import ro.utcn.sd.vasi.SnackOverflow.event.AnswerUpdatedEvent;
-import ro.utcn.sd.vasi.SnackOverflow.event.VotedAnswerEvent;
+import ro.utcn.sd.vasi.SnackOverflow.dto.UserDTO;
+import ro.utcn.sd.vasi.SnackOverflow.event.*;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.AnswerNotFoundException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.QuestionNotFoundException;
@@ -52,6 +50,8 @@ public class AnswerManagementService {
 
         eventPublisher.publishEvent(new VotedAnswerEvent(serviceHelper.getAnswerDTO(
                 repositoryFactory.createAnswerRepository().findById(answer.getId()).orElseThrow(AnswerNotFoundException::new))));
+        eventPublisher.publishEvent(new UserUpdatedEvent(UserDTO.ofEntity(repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new))));
+        eventPublisher.publishEvent(new UserUpdatedEvent(UserDTO.ofEntity(repositoryFactory.createUserRepository().findById(answer.getAuthorId()).orElseThrow(UserNotFoundException::new))));
         return true;
     }
 
