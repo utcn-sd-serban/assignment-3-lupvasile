@@ -19,9 +19,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //aici antmatchers.hasauthority
-        http.authorizeRequests().anyRequest().authenticated().and()
-                .httpBasic().and()
+        http.authorizeRequests()
+                .antMatchers("/users/**").hasAuthority("ROLE_MODERATOR")
+                .antMatchers("/me/**").permitAll()
+                .antMatchers("/**").hasAuthority("ROLE_USER")
+                .anyRequest().authenticated()
+                .and().httpBasic().and()
                 // next line disables session creation (forces true HTTP Basic behavior)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .cors().and()

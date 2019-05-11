@@ -13,8 +13,9 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
-    public ErrorDTO handlerNPE(NullPointerException ex) {
-        return new ErrorDTO("NPE");
+    //ce se intampla daca ex nu e de tipu clasei din ExceptionHandler?
+    public ErrorDTO handlerError(Exception ex) {
+        return new ErrorDTO(ex.getClass().getSimpleName());
     }
 
 }

@@ -22,6 +22,7 @@ import ro.utcn.sd.vasi.SnackOverflow.repository.api.RepositoryFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service(value = "UserlManagementServiceOld")
 @RequiredArgsConstructor
@@ -40,6 +41,14 @@ public class UserManagementService implements UserDetailsService {
         }
 
         return Optional.empty();
+    }
+
+    @Transactional
+    public List<UserLoggedInDTO> listAllUsers(int requesterUserId) {
+        User requesterUser = repositoryFactory.createUserRepository().findById(requesterUserId).orElseThrow(UserNotFoundException::new);
+        return repositoryFactory.createUserRepository().findAll().stream()
+                .map(UserLoggedInDTO::ofEntity)
+                .collect(Collectors.toList());
     }
 
     @Transactional
