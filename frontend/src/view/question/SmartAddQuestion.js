@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import model from "../model/model";
-import questionPresenter from "../presenter/QuestionPresenter";
+import model from "../../model/model";
+import questionPresenter from "../../presenter/QuestionPresenter";
 import AddQuestion from "./AddQuestion";
 
 

@@ -1,6 +1,6 @@
 import React from "react";
 import QuestionSummary from "./QuestionSummary";
-import SmartNavBar from "./SmartNavBar";
+import SmartNavBar from "../user/SmartNavBar";
 //id, author, title, text, creationDateTime, tags, voteCount
 const QuestionList = ({ questions, onViewDetails, questionSearchText, onChangeSearchText, onSearchByTitle, onSearchByTag }) => (
     <div>

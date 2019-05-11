@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import model from "../model/model";
-import answerPresenter from "../presenter/AnswerPresenter";
-import UpdateAnswer from "./UpdateAnswer";
+import model from "../../model/model";
+import questionPresenter from "../../presenter/QuestionPresenter";
+import UpdateQuestion from "./UpdateQuestion";
 
 
 const mapModelStateToComponentState = (modelState, props) => ({
-    updateAnswer: modelState.updateAnswer,
-    updateId: parseInt(props.match.params.answerId)
+    updateQuestion: modelState.updateQuestion,
+    updateId: parseInt(props.match.params.questionId)
 });
 
-export default class SmartUpdateAnswer extends Component {
+export default class SmartUpdateQuestion extends Component {
     constructor(props) {
         super(props);
         this.state = mapModelStateToComponentState(model.state, props);
@@ -18,7 +18,7 @@ export default class SmartUpdateAnswer extends Component {
     }
 
     componentDidUpdate(prev) {
-        if (prev.match.params.answerId !== this.props.match.params.answerId) {
+        if (prev.match.params.questionId !== this.props.match.params.questionId) {
             this.setState(mapModelStateToComponentState(model.state, this.props));
         }
     }
@@ -29,11 +29,11 @@ export default class SmartUpdateAnswer extends Component {
 
     render() {
         return (
-            <UpdateAnswer
-                onUpdate={answerPresenter.onUpdate}
-                onChange={answerPresenter.onChangeForUpdate}
-                answer={this.state.updateAnswer}
-                answerId={this.state.updateId}
+            <UpdateQuestion
+                onUpdate={questionPresenter.onUpdate}
+                onChange={questionPresenter.onChangeForUpdate}
+                question={this.state.updateQuestion}
+                questionId={this.state.updateId}
             />
         );
     }

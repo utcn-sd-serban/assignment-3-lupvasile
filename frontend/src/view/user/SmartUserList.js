@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import model from "../model/model";
-import userPresenter from "../presenter/UserPresenter";
+import model from "../../model/model";
+import userPresenter from "../../presenter/UserPresenter";
 import UserList from "./UserList";
 
 const mapModelStateToComponentState = modelState => ({

@@ -1,6 +1,6 @@
 import React from "react";
-import SmartAnswerList from "./SmartAnswerList";
-import SmartNavBar from "./SmartNavBar";
+import SmartAnswerList from "../answer/SmartAnswerList";
+import SmartNavBar from "../user/SmartNavBar";
 
 const QuestionDetails = ({ question, loggedUser, onDelete, onEdit, onVote }) => (
     <div>

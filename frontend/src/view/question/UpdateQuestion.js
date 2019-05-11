@@ -1,5 +1,5 @@
 import React from "react";
-import SmartNavBar from "./SmartNavBar";
+import SmartNavBar from "../user/SmartNavBar";
 
 const UpdateQuestion = ({ question, onUpdate, onChange, questionId }) => (
     <div>

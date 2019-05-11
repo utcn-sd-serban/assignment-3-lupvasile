@@ -1,14 +1,14 @@
 import React from 'react';
 import { HashRouter, Route, Switch } from "react-router-dom";
 import './App.css';
-import BannedUser from './view/BannedUser';
-import SmartAddQuestion from './view/SmartAddQuestion';
-import SmartLogin from './view/SmartLogin';
-import SmartQuestionDetails from './view/SmartQuestionDetails';
-import SmartQuestionList from './view/SmartQuestionList';
-import SmartUpdateAnswer from './view/SmartUpdateAnswer';
-import SmartUpdateQuestion from './view/SmartUpdateQuestion';
-import SmartUserList from './view/SmartUserList';
+import BannedUser from './view/user/BannedUser';
+import SmartAddQuestion from './view/question/SmartAddQuestion';
+import SmartLogin from './view/user/SmartLogin';
+import SmartQuestionDetails from './view/question/SmartQuestionDetails';
+import SmartQuestionList from './view/question/SmartQuestionList';
+import SmartUpdateAnswer from './view/answer/SmartUpdateAnswer';
+import SmartUpdateQuestion from './view/question/SmartUpdateQuestion';
+import SmartUserList from './view/user/SmartUserList';
 
 
 

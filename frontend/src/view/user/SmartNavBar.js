@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import model from "../model/model";
-import navBarPresenter from "../presenter/NavBarPresenter";
+import model from "../../model/model";
+import navBarPresenter from "../../presenter/NavBarPresenter";
 import NavBar from "./NavBar";
 
 

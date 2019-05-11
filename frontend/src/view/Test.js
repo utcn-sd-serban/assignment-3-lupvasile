@@ -1,10 +1,10 @@
 import React from "react";
-import NavBar from './NavBar'
-import QuestionSummary from "./QuestionSummary";
-import QuestionList from "./QuestionList";
-import AddQuestion from "./AddQuestion";
-import AnswerDetails from "./AnswerDetails";
-import AnswerList from "./AnswerList";
+import NavBar from './user/NavBar'
+import QuestionSummary from "./question/QuestionSummary";
+import QuestionList from "./question/QuestionList";
+import AddQuestion from "./question/AddQuestion";
+import AnswerDetails from "./answer/AnswerDetails";
+import AnswerList from "./answer/AnswerList";
 
 const makeQuestion = (id, author, title, text, creationDateTime, tags, voteCount) => ({
     id, author, title, text, creationDateTime, tags, voteCount
