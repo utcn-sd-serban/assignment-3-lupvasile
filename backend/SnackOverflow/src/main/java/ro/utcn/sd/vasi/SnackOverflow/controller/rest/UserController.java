@@ -25,6 +25,12 @@ public class UserController {
         return UserLoggedInDTO.ofEntity(userManagementService.loadCurrentUser());
     }
 
+    @PostMapping("/me2")
+    public void asdf(@RequestBody UserLoggedInDTO user) {
+        System.out.println(user);
+    }
+
+
     //shoud this be post or get or put?
     @PutMapping("/users/{userId}/ban")
     public void banUser(@PathVariable int userId) {
