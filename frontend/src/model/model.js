@@ -54,7 +54,10 @@ class Model extends EventEmitter {
     }
 
     banUserToLocalState(bannedUserId) {
-        this.state.users.find(u => u.id === bannedUserId).isBlocked = true;
+        var user = this.state.users.find(u => u.id === bannedUserId);
+        if (user) user.isBlocked = true;
+
+        if (this.state.currentUser.id === bannedUserId) this.isBlocked = true;
         this.emit("change", this.state);
     }
 
