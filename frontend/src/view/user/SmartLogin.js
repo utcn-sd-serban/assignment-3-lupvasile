@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import model from "../../model/model";
 import LoginPresenter from "../../presenter/LoginPresenter";
 import Login from "./Login";
@@ -27,7 +27,7 @@ export default class SmartLogin extends Component {
                 username={this.state.username}
                 password={this.state.password}
                 onLogin={LoginPresenter.onLogin}
-                onChange={LoginPresenter.onChange} />
+                onChange={LoginPresenter.onChange}/>
         );
     }
 }

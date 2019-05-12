@@ -1,6 +1,6 @@
 import React from "react";
 
-const AnswerDetails = ({ answer, loggedUser, onDelete, onEdit, onVote }) => (
+const AnswerDetails = ({answer, loggedUser, onDelete, onEdit, onVote}) => (
     <div>
         {answer !== undefined ?
             <div>
@@ -17,9 +17,11 @@ const AnswerDetails = ({ answer, loggedUser, onDelete, onEdit, onVote }) => (
                                                 <span className="tag">score: {answer.author.score}</span>
                                                 <span className="tag">voteCount: {answer.voteCount}</span>
                                                 {answer.author.id !== loggedUser.id ?
-                                                    <span className="tag"><a onClick={() => onVote(answer.id, 1)}>Upvote</a></span> : null}
+                                                    <span className="tag"><a
+                                                        onClick={() => onVote(answer.id, 1)}>Upvote</a></span> : null}
                                                 {answer.author.id !== loggedUser.id ?
-                                                    <span className="tag"><a onClick={() => onVote(answer.id, -1)}>Downvote</a></span> : null}
+                                                    <span className="tag"><a
+                                                        onClick={() => onVote(answer.id, -1)}>Downvote</a></span> : null}
                                                 <span className="tag is-rounded">{answer.creationDateTime}</span>
                                             </div>
                                         </div>
@@ -27,9 +29,13 @@ const AnswerDetails = ({ answer, loggedUser, onDelete, onEdit, onVote }) => (
                                     <div className="media-content">
                                         {loggedUser.id === answer.author.id || loggedUser.isModerator ?
                                             <div>
-                                                <button className="button is-info is-light is-small" onClick={() => onEdit(answer.id)}>Edit</button>
+                                                <button className="button is-info is-light is-small"
+                                                        onClick={() => onEdit(answer.id)}>Edit
+                                                </button>
                                                 &nbsp;
-                                                <button className="button is-black is-small" onClick={() => onDelete(answer.id)}>Delete</button>
+                                                <button className="button is-black is-small"
+                                                        onClick={() => onDelete(answer.id)}>Delete
+                                                </button>
                                             </div>
                                             : null
                                         }

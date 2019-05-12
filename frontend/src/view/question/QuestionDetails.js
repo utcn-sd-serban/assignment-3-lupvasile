@@ -2,9 +2,9 @@ import React from "react";
 import SmartAnswerList from "../answer/SmartAnswerList";
 import SmartNavBar from "../user/SmartNavBar";
 
-const QuestionDetails = ({ question, loggedUser, onDelete, onEdit, onVote }) => (
+const QuestionDetails = ({question, loggedUser, onDelete, onEdit, onVote}) => (
     <div>
-        <SmartNavBar />
+        <SmartNavBar/>
         {question !== undefined ?
             <div>
                 <section className="articles">
@@ -19,9 +19,11 @@ const QuestionDetails = ({ question, loggedUser, onDelete, onEdit, onVote }) => 
                                             <span className="tag is-info">score: {question.author.score}</span>
                                             <span className="tag">voteCount: {question.voteCount}</span>
                                             {question.author.id !== loggedUser.id ?
-                                                <span className="tag"><a onClick={() => onVote(question.id, 1)}>Upvote</a></span> : null}
+                                                <span className="tag"><a
+                                                    onClick={() => onVote(question.id, 1)}>Upvote</a></span> : null}
                                             {question.author.id !== loggedUser.id ?
-                                                <span className="tag"><a onClick={() => onVote(question.id, -1)}>Downvote</a></span> : null}
+                                                <span className="tag"><a
+                                                    onClick={() => onVote(question.id, -1)}>Downvote</a></span> : null}
                                             <span className="tag is-rounded">{question.creationDateTime}</span>
                                         </div>
                                     </div>
@@ -43,9 +45,13 @@ const QuestionDetails = ({ question, loggedUser, onDelete, onEdit, onVote }) => 
                                         </div>
                                         {loggedUser.isModerator ?
                                             <div>
-                                                <button className="button is-info is-light is-small" onClick={() => onEdit(question.id)}>Edit</button>
+                                                <button className="button is-info is-light is-small"
+                                                        onClick={() => onEdit(question.id)}>Edit
+                                                </button>
                                                 &nbsp;
-                                <button className="button is-black is-small" onClick={() => onDelete(question.id)}>Delete</button>
+                                                <button className="button is-black is-small"
+                                                        onClick={() => onDelete(question.id)}>Delete
+                                                </button>
                                             </div>
                                             : null
                                         }
@@ -55,7 +61,7 @@ const QuestionDetails = ({ question, loggedUser, onDelete, onEdit, onVote }) => 
                         </div>
                     </div>
                 </section>
-                <SmartAnswerList questionId={question.id} />
+                <SmartAnswerList questionId={question.id}/>
             </div>
             : null}
     </div>

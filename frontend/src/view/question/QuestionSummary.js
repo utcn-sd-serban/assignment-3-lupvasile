@@ -1,6 +1,6 @@
 import React from "react";
 //id, author, title, text, creationDateTime, tags, voteCount
-const QuestionSummary = ({ question, onViewDetails }) => (
+const QuestionSummary = ({question, onViewDetails}) => (
     <div className="box content">
         <article className="post">
             <h4>
@@ -14,7 +14,7 @@ const QuestionSummary = ({ question, onViewDetails }) => (
                     <div className="content">
                         <p>
                             {question.author.username} score: {question.author.score} &nbsp;
-											{
+                            {
                                 question.tags.map((tag, index) => (
                                     <span><span className="tag">{tag} </span> &nbsp;</span>
                                 ))

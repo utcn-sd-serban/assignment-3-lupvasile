@@ -1,7 +1,6 @@
 import {EventEmitter} from "events";
 import WebSocketListener from "../ws/WebSocketListener";
 import RestClientFactory from "../rest/RestClientFactory";
-import LoadAnswersForQuestionCommand from "../command/answerCommands";
 
 const makeUser = (id, username, password, score, isModerator, isBlocked) => ({
     id, username, password, score, isModerator, isBlocked
@@ -235,7 +234,7 @@ class Model extends EventEmitter {
         return this.client.createLoginClient().loadCurrentLoggedUser().then(user => {
             if (!user) return false;
 
-            if(this.hasOwnProperty("listener")) {
+            if (this.hasOwnProperty("listener")) {
                 delete this.listener.client.deactivate();
             }
             this.listener = new WebSocketListener(username, password);

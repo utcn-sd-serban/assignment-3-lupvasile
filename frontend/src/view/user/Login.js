@@ -1,6 +1,6 @@
 import React from "react";
 
-const Login = ({ username, password, onLogin, onChange }) => (
+const Login = ({username, password, onLogin, onChange}) => (
     <section className="hero is-fullheight">
         <div className="hero-body">
             <div className="container has-text-centered">
@@ -10,18 +10,22 @@ const Login = ({ username, password, onLogin, onChange }) => (
                     <div className="box">
                         <div className="field">
                             <div className="control">
-                                <input className="input is-large" type="username" placeholder="Your Username" autofocus="" value={username}
-                                    onChange={e => onChange("username", e.target.value)} />
+                                <input className="input is-large" type="username" placeholder="Your Username"
+                                       autofocus="" value={username}
+                                       onChange={e => onChange("username", e.target.value)}/>
                             </div>
                         </div>
 
                         <div className="field">
                             <div className="control">
-                                <input className="input is-large" type="password" placeholder="Your Password" value={password}
-                                    onChange={e => onChange("password", e.target.value)} />
+                                <input className="input is-large" type="password" placeholder="Your Password"
+                                       value={password}
+                                       onChange={e => onChange("password", e.target.value)}/>
                             </div>
                         </div>
-                        <button className="button is-block is-info is-large is-fullwidth" onClick={() => onLogin()}>Login</button>
+                        <button className="button is-block is-info is-large is-fullwidth"
+                                onClick={() => onLogin()}>Login
+                        </button>
                     </div>
                 </div>
             </div>

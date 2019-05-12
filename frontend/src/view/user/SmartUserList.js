@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import model from "../../model/model";
 import userPresenter from "../../presenter/UserPresenter";
 import UserList from "./UserList";
@@ -26,7 +26,7 @@ export default class SmartUserList extends Component {
     render() {
         return (
             <UserList onBan={userPresenter.onBan}
-                users={this.state.users}
+                      users={this.state.users}
             />
         );
     }

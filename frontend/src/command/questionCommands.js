@@ -1,5 +1,4 @@
 import questionModel from "../model/questionModel";
-import answerModel from "../model/answerModel";
 import model from "../model/model";
 
 class AddQuestionCommand {

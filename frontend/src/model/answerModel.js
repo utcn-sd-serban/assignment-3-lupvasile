@@ -1,7 +1,5 @@
 import model from "../model/model";
 import {EventEmitter} from "events";
-import WebSocketListener from "../ws/WebSocketListener";
-import RestClientFactory from "../rest/RestClientFactory";
 
 class AnswerModel extends EventEmitter {
     loadAnswersForQuestion(questionId) {
@@ -19,7 +17,7 @@ class AnswerModel extends EventEmitter {
 
 
     addAnswer(text, questionId) {
-        return model.client.createAnswerClient().createAnswer(text,questionId);
+        return model.client.createAnswerClient().createAnswer(text, questionId);
     }
 
     updateAnswer(answerId, newText) {

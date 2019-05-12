@@ -6,7 +6,7 @@ const BannedUser = () => (
             <div className="container has-text-centered">
                 <h1 className="title">YOU ARE BANNED</h1>
                 <p>you can't do any actions</p>
-                <br />
+                <br/>
                 <a className="button is-warning is-large" href="#/">Logout</a>
             </div>
 

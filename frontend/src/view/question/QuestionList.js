@@ -2,16 +2,16 @@ import React from "react";
 import QuestionSummary from "./QuestionSummary";
 import SmartNavBar from "../user/SmartNavBar";
 //id, author, title, text, creationDateTime, tags, voteCount
-const QuestionList = ({ questions, onViewDetails, questionSearchText, onChangeSearchText, onSearchByTitle, onSearchByTag }) => (
+const QuestionList = ({questions, onViewDetails, questionSearchText, onChangeSearchText, onSearchByTitle, onSearchByTag}) => (
     <div>
-        <SmartNavBar />
+        <SmartNavBar/>
         <nav className="navbar is-white">
             <div className="container">
                 <div className="navbar-menu">
                     <div className="navbar-start">
                         <div className="navbar-item">
                             <input className="input" type="search" placeholder="Search..." value={questionSearchText}
-                                onChange={e => onChangeSearchText(e.target.value)} />
+                                   onChange={e => onChangeSearchText(e.target.value)}/>
                         </div>
                         <a className="navbar-item" onClick={onSearchByTitle}>by title</a>
                         <a className="navbar-item" onClick={onSearchByTag}>by tag</a>

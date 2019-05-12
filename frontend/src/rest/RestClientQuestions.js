@@ -100,7 +100,8 @@ export default class RestClientQuestions {
             if (!response.ok) return [];
             else {
                 return response.json();
-            };
+            }
+            ;
         }).then(tags => tags.map(t => t.value));
     }
 }

@@ -1,7 +1,5 @@
 import model from "../model/model";
 import {EventEmitter} from "events";
-import WebSocketListener from "../ws/WebSocketListener";
-import RestClientFactory from "../rest/RestClientFactory";
 
 class UserModel extends EventEmitter {
     loadAllUsers() {

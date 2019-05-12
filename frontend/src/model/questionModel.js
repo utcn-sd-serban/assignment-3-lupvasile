@@ -17,7 +17,7 @@ class QuestionModel extends EventEmitter {
     }
 
     addQuestion(title, text, tags) {
-        return model.client.createQuestionClient().createQuestion(title,text,tags);
+        return model.client.createQuestionClient().createQuestion(title, text, tags);
     }
 
     updateQuestion(questionId, newTitle, newText) {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import model from "../../model/model";
 import answerPresenter from "../../presenter/AnswerPresenter";
 import AnswerList from "./AnswerList";
@@ -31,11 +31,11 @@ export default class SmartAnswerList extends Component {
     render() {
         return (
             <AnswerList answers={this.state.answers}
-                loggedUser={this.state.loggedUser}
-                onDelete={answerPresenter.onDelete}
-                onEdit={answerPresenter.onEdit}
-                onVote={answerPresenter.onVote}
-                questionId={this.state.questionId}
+                        loggedUser={this.state.loggedUser}
+                        onDelete={answerPresenter.onDelete}
+                        onEdit={answerPresenter.onEdit}
+                        onVote={answerPresenter.onVote}
+                        questionId={this.state.questionId}
             />
         );
     }

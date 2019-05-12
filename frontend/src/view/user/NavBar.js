@@ -1,6 +1,6 @@
 import React from "react";
 //maybe just a href?
-const NavBar = ({ user, onLogout, onAllQuestions, onAddQuestion, onBanUsers, onUndo, onRedo }) => (
+const NavBar = ({user, onLogout, onAllQuestions, onAddQuestion, onBanUsers, onUndo, onRedo}) => (
     <div>
         <nav className="navbar is-light topNav">
             <div className="container">
@@ -28,7 +28,7 @@ const NavBar = ({ user, onLogout, onAllQuestions, onAddQuestion, onBanUsers, onU
 
                             <p>
                                 <strong>{user.username}</strong> score: {user.score} &nbsp;
-                                    </p>
+                            </p>
 
                             <p className="control">
                                 <a className="button is-small is-outlined" onClick={onLogout}>

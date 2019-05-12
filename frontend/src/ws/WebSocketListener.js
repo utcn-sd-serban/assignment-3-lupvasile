@@ -1,5 +1,5 @@
-import { EventEmitter } from "events";
-import { Client } from "@stomp/stompjs";
+import {EventEmitter} from "events";
+import {Client} from "@stomp/stompjs";
 
 export default class WebSocketListener extends EventEmitter {
     constructor(username, password) {

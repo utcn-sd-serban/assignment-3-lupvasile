@@ -1,6 +1,6 @@
 import React from "react";
 //id, author, title, text, creationDateTime, tags, voteCount
-const UserSummary = ({ user, onBan }) => (
+const UserSummary = ({user, onBan}) => (
     <div>
         <section className="articles">
             <div className="column">
@@ -32,7 +32,7 @@ const UserSummary = ({ user, onBan }) => (
                 </div>
             </div>
         </section>
-    </div >
+    </div>
 
 
 );

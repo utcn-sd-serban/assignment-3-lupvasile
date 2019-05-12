@@ -1,4 +1,3 @@
-import model from "../model/model";
 import userModel from "../model/userModel";
 import invoker from "../command/invoker";
 import {BanUserCommand} from "../command/userCommands";
