@@ -7,7 +7,7 @@ import ro.utcn.sd.vasi.SnackOverflow.repository.api.VoteAnswerRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface DataVoteAnswerRepository extends Repository<VoteAnswer,Integer>, VoteAnswerRepository {
+public interface DataVoteAnswerRepository extends Repository<VoteAnswer, Integer>, VoteAnswerRepository {
     void delete(VoteAnswer element);
 
     @Override
@@ -23,20 +23,23 @@ public interface DataVoteAnswerRepository extends Repository<VoteAnswer,Integer>
     }
 
     List<VoteAnswer> findAllByCineDaId(Integer id);
+
     @Override
     default List<VoteAnswer> findAllVotesFromUserId(int id) {
         return findAllByCineDaId(id);
     }
 
     List<VoteAnswer> findAllByCinePrimesteId(Integer id);
+
     @Override
     default List<VoteAnswer> findAllVotesTowardsUserId(int userId) {
         return findAllByCinePrimesteId(userId);
     }
 
     Optional<VoteAnswer> findFirstByCineDaIdAndCinePrimesteId(Integer cineDaId, Integer cinePrimesteId);
+
     @Override
     default Optional<VoteAnswer> findVoteFromUserForPost(int userId, int postId) {
-        return findFirstByCineDaIdAndCinePrimesteId(userId,postId);
+        return findFirstByCineDaIdAndCinePrimesteId(userId, postId);
     }
 }

@@ -19,6 +19,6 @@ public class HibernateAnswerRepository extends HibernateGeneralRepository<Answer
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Answer> query = builder.createQuery(Answer.class);
         Root<Answer> answerRoot = query.from(Answer.class);
-        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("questionId"),questionId))).getResultList();
+        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("questionId"), questionId))).getResultList();
     }
 }

@@ -1,21 +1,16 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import ro.utcn.sd.vasi.SnackOverflow.model.Question;
 import ro.utcn.sd.vasi.SnackOverflow.model.Tag;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.QuestionRepository;
-import ro.utcn.sd.vasi.SnackOverflow.repository.jdbc.JdbcGeneralRepository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 public class JdbcQuestionRepository extends JdbcGeneralRepository<Question> implements QuestionRepository {
     private JdbcTagRepository jdbcTagRepository;
+
     public JdbcQuestionRepository(JdbcTemplate template, JdbcTagRepository tagRepository) {
         super(template, Question.class, new QuestionMapper());
         this.jdbcTagRepository = tagRepository;
@@ -24,7 +19,7 @@ public class JdbcQuestionRepository extends JdbcGeneralRepository<Question> impl
     @Override
     public List<Question> findAll() {
         List<Question> questions = super.findAll();
-        questions.forEach(x->makeQuestionComplete(x));
+        questions.forEach(x -> makeQuestionComplete(x));
 
         return questions;
     }
@@ -37,11 +32,11 @@ public class JdbcQuestionRepository extends JdbcGeneralRepository<Question> impl
         insert.setTableName("question_tag");
         insert.usingGeneratedKeyColumns("id");
 
-        Map<String,Object> map = new HashMap<>();
-        question.getTags().forEach(t-> {
+        Map<String, Object> map = new HashMap<>();
+        question.getTags().forEach(t -> {
             map.clear();
-            map.put("question",questionId);
-            map.put("tag",t.getId());
+            map.put("question", questionId);
+            map.put("tag", t.getId());
             insert.executeAndReturnKey(map);
         });
 
@@ -51,7 +46,7 @@ public class JdbcQuestionRepository extends JdbcGeneralRepository<Question> impl
     @Override
     public Optional<Question> findById(int id) {
         Optional<Question> q = super.findById(id);
-        if(q.isPresent()) {
+        if (q.isPresent()) {
             Question goodQ = q.get();
             makeQuestionComplete(goodQ);
             q = Optional.of(goodQ);
@@ -65,7 +60,7 @@ public class JdbcQuestionRepository extends JdbcGeneralRepository<Question> impl
                 question.getId());
 
         Set<Tag> tags = new HashSet<>();
-        tagIds.forEach(tagId->tags.add(jdbcTagRepository.findById(tagId).orElse(null)));
+        tagIds.forEach(tagId -> tags.add(jdbcTagRepository.findById(tagId).orElse(null)));
         question.getTags().addAll(tags);
     }
 }

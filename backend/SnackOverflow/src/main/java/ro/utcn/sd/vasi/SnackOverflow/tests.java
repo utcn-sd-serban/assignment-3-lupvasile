@@ -6,21 +6,17 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ro.utcn.sd.vasi.SnackOverflow.data_assembler.ScoreCalcuator;
-import ro.utcn.sd.vasi.SnackOverflow.model.*;
+import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.RepositoryFactory;
 import ro.utcn.sd.vasi.SnackOverflow.repository.jpa.HibernateAnswerRepository;
 import ro.utcn.sd.vasi.SnackOverflow.repository.jpa.HibernateQuestionRepository;
-import ro.utcn.sd.vasi.SnackOverflow.repository.jpa.HibernateVoteAnswerRepository;
-
 
 import javax.persistence.*;
-import javax.swing.text.TabableView;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -43,31 +39,32 @@ public class tests implements CommandLineRunner {
             Thread.sleep(200);
         }*/
     }
+
     Map<String, Object> getElementMap(Answer element, Class<?> currClass) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         Method[] methods = currClass.getMethods();
-        for(Method m : methods) {
+        for (Method m : methods) {
             String methodName = m.getName();
-            if(!(methodName.startsWith("is") || methodName.startsWith("get"))) continue;
+            if (!(methodName.startsWith("is") || methodName.startsWith("get"))) continue;
 
             String fieldName;
-            if(methodName.startsWith("get")) fieldName = methodName.replaceFirst("get","");
-            else fieldName = methodName.replaceFirst("is","");
-            fieldName = fieldName.substring(0,1).toLowerCase() + fieldName.substring(1);
+            if (methodName.startsWith("get")) fieldName = methodName.replaceFirst("get", "");
+            else fieldName = methodName.replaceFirst("is", "");
+            fieldName = fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
 
             try {
                 Field field = currClass.getDeclaredField(fieldName);
 
-                if(field.isAnnotationPresent(Transient.class) || field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToOne.class) ||
+                if (field.isAnnotationPresent(Transient.class) || field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToOne.class) ||
                         field.isAnnotationPresent(ManyToMany.class)) continue;
 
-                if(field.isAnnotationPresent(Column.class)) {
+                if (field.isAnnotationPresent(Column.class)) {
                     fieldName = field.getAnnotation(Column.class).name();
                 } else {
                     fieldName = camelCaseToUnderscore(fieldName);
                 }
 
-                map.put(fieldName,m.invoke(element));
+                map.put(fieldName, m.invoke(element));
             } catch (NoSuchFieldException e) {
                 System.out.println("field " + fieldName + "is not present on object");
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -95,8 +92,8 @@ public class tests implements CommandLineRunner {
 
         int id = 1;
         repositoryFactory.createQuestionVoteRepository().findAllVotesTowardsUserId(1);
-                repositoryFactory.createAnswerVoteRepository().findAllVotesTowardsUserId(1);
-                repositoryFactory.createQuestionVoteRepository().findAllVotesFromUserId(1);
-                repositoryFactory.createAnswerVoteRepository().findAllVotesFromUserId(1);
+        repositoryFactory.createAnswerVoteRepository().findAllVotesTowardsUserId(1);
+        repositoryFactory.createQuestionVoteRepository().findAllVotesFromUserId(1);
+        repositoryFactory.createAnswerVoteRepository().findAllVotesFromUserId(1);
     }
 }

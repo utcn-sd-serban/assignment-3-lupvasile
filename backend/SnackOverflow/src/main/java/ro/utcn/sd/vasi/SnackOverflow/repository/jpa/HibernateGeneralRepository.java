@@ -1,7 +1,6 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.jpa;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Criteria;
 import ro.utcn.sd.vasi.SnackOverflow.model.HasIntId;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.GeneralRepository;
 
@@ -27,7 +26,7 @@ public class HibernateGeneralRepository<T extends HasIntId> implements GeneralRe
 
     @Override
     public T save(T element) {
-        if(element.getId() == null) {
+        if (element.getId() == null) {
             entityManager.persist(element);
             return element;
         } else {

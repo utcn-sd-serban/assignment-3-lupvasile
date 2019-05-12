@@ -11,7 +11,9 @@ import ro.utcn.sd.vasi.SnackOverflow.services.AnswerManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.QuestionManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.UserManagementService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 @Component
 @Data
@@ -27,10 +29,10 @@ public class ConsoleController implements CommandLineRunner {
     private User currentUser;
 
     private void addHandlers() {
-        commandHandlers.add(new AnswerHandler(this,answerManagementService,questionManagementService,userManagementService));
-        commandHandlers.add(new QuestionHandler(this,answerManagementService,questionManagementService,userManagementService));
-        commandHandlers.add(new UserHandler(this,answerManagementService,questionManagementService,userManagementService));
-        commandHandlers.add(new VoteHandler(this,answerManagementService,questionManagementService,userManagementService));
+        commandHandlers.add(new AnswerHandler(this, answerManagementService, questionManagementService, userManagementService));
+        commandHandlers.add(new QuestionHandler(this, answerManagementService, questionManagementService, userManagementService));
+        commandHandlers.add(new UserHandler(this, answerManagementService, questionManagementService, userManagementService));
+        commandHandlers.add(new VoteHandler(this, answerManagementService, questionManagementService, userManagementService));
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ConsoleController implements CommandLineRunner {
 
         doLogin();
 
-        if(currentUser.getIsBlocked()) {
+        if (currentUser.getIsBlocked()) {
             print("YOU ARE BANNED");
             print("YOU CAN'T PERFORM ANY ACTIONS");
             return;
@@ -65,12 +67,11 @@ public class ConsoleController implements CommandLineRunner {
         }
     }
 
-    private void doLogin()
-    {
+    private void doLogin() {
         //currentUser = userManagementService.getLogin("u2","pass").orElse(null);
 
         boolean done = false;
-        while(!done) {
+        while (!done) {
             print("username: ");
             String username = scanner.next().trim();
 
@@ -78,11 +79,10 @@ public class ConsoleController implements CommandLineRunner {
             String password = scanner.next().trim();
             scanner.nextLine();
 
-            currentUser = userManagementService.getLogin(username,password,passwordEncoder).orElse(null);
-            if(currentUser == null) {
+            currentUser = userManagementService.getLogin(username, password, passwordEncoder).orElse(null);
+            if (currentUser == null) {
                 print("wrong login data");
-            }
-            else {
+            } else {
                 print("Welcome " + currentUser.getUsername());
                 done = true;
             }

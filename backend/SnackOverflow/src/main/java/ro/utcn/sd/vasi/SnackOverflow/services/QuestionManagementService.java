@@ -1,10 +1,9 @@
 package ro.utcn.sd.vasi.SnackOverflow.services;
 
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
+import org.springframework.transaction.annotation.Transactional;
 import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
 import ro.utcn.sd.vasi.SnackOverflow.dto.TagDTO;
 import ro.utcn.sd.vasi.SnackOverflow.dto.UserDTO;
@@ -13,10 +12,11 @@ import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughTagsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.QuestionNotFoundException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.UserNotFoundException;
-import ro.utcn.sd.vasi.SnackOverflow.model.*;
+import ro.utcn.sd.vasi.SnackOverflow.model.Question;
+import ro.utcn.sd.vasi.SnackOverflow.model.Tag;
+import ro.utcn.sd.vasi.SnackOverflow.model.User;
+import ro.utcn.sd.vasi.SnackOverflow.model.VoteQuestion;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.RepositoryFactory;
-
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.QueryTimeoutException;
 import java.time.ZonedDateTime;
@@ -44,7 +44,7 @@ public class QuestionManagementService {
     @Transactional
     public List<QuestionDTO> filterQuestionsByTag(Set<Tag> tags) {
         return repositoryFactory.createQuestionRepository().findAll().stream()
-                .filter(x->x.getTags().containsAll(tags))
+                .filter(x -> x.getTags().containsAll(tags))
                 .sorted(Comparator.comparing(Question::getCreationDateTime).reversed())
                 .map(serviceHelper::getQuestionDTO)
                 .collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class QuestionManagementService {
     @Transactional
     public List<QuestionDTO> filterQuestionsByTitle(String titlePattern) {
         return repositoryFactory.createQuestionRepository().findAll().stream()
-                .filter(x->x.getTitle().contains(titlePattern))
+                .filter(x -> x.getTitle().contains(titlePattern))
                 .sorted(Comparator.comparing(Question::getCreationDateTime).reversed())
                 .map(serviceHelper::getQuestionDTO)
                 .collect(Collectors.toList());
@@ -61,6 +61,7 @@ public class QuestionManagementService {
 
     /**
      * I suppose all the time that the userId is valid
+     *
      * @param userId
      * @param title
      * @param text
@@ -70,13 +71,13 @@ public class QuestionManagementService {
     @Transactional
     public QuestionDTO addQuestion(int userId, String title, String text, Set<Tag> tags) {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
-        if(user.getIsBlocked()) throw new NotEnoughPermissionsException();
-        if(tags.isEmpty()) throw new NotEnoughTagsException();
+        if (user.getIsBlocked()) throw new NotEnoughPermissionsException();
+        if (tags.isEmpty()) throw new NotEnoughTagsException();
 
         tags = saveQuestionTags(tags);
 
         QuestionDTO questionDTO = serviceHelper.getQuestionDTO(
-                repositoryFactory.createQuestionRepository().save(new Question(userId,title,text, ZonedDateTime.now(), tags,0)));
+                repositoryFactory.createQuestionRepository().save(new Question(userId, title, text, ZonedDateTime.now(), tags, 0)));
 
         eventPublisher.publishEvent(new QuestionCreatedEvent(questionDTO));
         return questionDTO;
@@ -87,10 +88,10 @@ public class QuestionManagementService {
         VoteQuestion currVote = repositoryFactory.createQuestionVoteRepository().findVoteFromUserForPost(userId, questionId).orElse(null);
         Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
-        if(currVote != null && currVote.isValue() == value) return false;
-        if(userId == question.getAuthorId()) return false;
+        if (currVote != null && currVote.isValue() == value) return false;
+        if (userId == question.getAuthorId()) return false;
 
-        if(currVote == null) currVote = new VoteQuestion(null,userId,question.getAuthorId(),questionId,value);
+        if (currVote == null) currVote = new VoteQuestion(null, userId, question.getAuthorId(), questionId, value);
         currVote.setValue(value);
 
         repositoryFactory.createQuestionVoteRepository().save(currVote);
@@ -112,7 +113,7 @@ public class QuestionManagementService {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QueryTimeoutException::new);
 
-        if(!user.getIsModerator()) throw new NotEnoughPermissionsException();
+        if (!user.getIsModerator()) throw new NotEnoughPermissionsException();
 
         question.setTitle(newTitle);
         question.setText(newText);
@@ -129,7 +130,7 @@ public class QuestionManagementService {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
-        if(!user.getIsModerator()) throw new NotEnoughPermissionsException();
+        if (!user.getIsModerator()) throw new NotEnoughPermissionsException();
 
         repositoryFactory.createQuestionRepository().remove(question);
         eventPublisher.publishEvent(new QuestionDeletedEvent(questionId));
@@ -140,7 +141,7 @@ public class QuestionManagementService {
     }
 
     @Transactional
-    public QuestionDTO getQuestion(int questionId){
+    public QuestionDTO getQuestion(int questionId) {
         return serviceHelper.getQuestionDTO(repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new));
     }
 
@@ -150,9 +151,10 @@ public class QuestionManagementService {
         Set<Tag> newTags = new HashSet<>(tags);
         newTags.removeAll(existingTags);
 
-        newTags.forEach(t->{
+        newTags.forEach(t -> {
             t.setId(null);
-            repositoryFactory.createTagRepository().save(t);});
+            repositoryFactory.createTagRepository().save(t);
+        });
 
         newTags = new HashSet<>(repositoryFactory.createTagRepository().findAll());
         newTags.retainAll(tags);

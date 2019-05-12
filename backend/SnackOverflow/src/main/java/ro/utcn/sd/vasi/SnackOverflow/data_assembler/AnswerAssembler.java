@@ -15,7 +15,7 @@ public class AnswerAssembler extends GeneralAssembler<Answer, AnswerRepository> 
     @Override
     public List<Answer> findAllbyQuestionId(int questionId) {
         List<Answer> res = currRepo.findAllbyQuestionId(questionId);
-        res.forEach(x->makeElementComplete(x));
+        res.forEach(x -> makeElementComplete(x));
         return res;
     }
 

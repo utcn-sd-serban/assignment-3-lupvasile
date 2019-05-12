@@ -11,11 +11,15 @@ import ro.utcn.sd.vasi.SnackOverflow.exceptions.AnswerNotFoundException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.QuestionNotFoundException;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.UserNotFoundException;
-import ro.utcn.sd.vasi.SnackOverflow.model.*;
+import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
+import ro.utcn.sd.vasi.SnackOverflow.model.Question;
+import ro.utcn.sd.vasi.SnackOverflow.model.User;
+import ro.utcn.sd.vasi.SnackOverflow.model.VoteAnswer;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.RepositoryFactory;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service(value = "AnswerManagementServiceOld")
@@ -40,10 +44,10 @@ public class AnswerManagementService {
         VoteAnswer currVote = repositoryFactory.createAnswerVoteRepository().findVoteFromUserForPost(userId, answerId).orElse(null);
         Answer answer = repositoryFactory.createAnswerRepository().findById(answerId).orElseThrow(AnswerNotFoundException::new);
 
-        if(currVote != null && currVote.isValue() == value) return false;
-        if(userId == answer.getAuthorId()) return false;
+        if (currVote != null && currVote.isValue() == value) return false;
+        if (userId == answer.getAuthorId()) return false;
 
-        if(currVote == null) currVote = new VoteAnswer(null,userId,answer.getAuthorId(),answerId,value);
+        if (currVote == null) currVote = new VoteAnswer(null, userId, answer.getAuthorId(), answerId, value);
         currVote.setValue(value);
 
         repositoryFactory.createAnswerVoteRepository().save(currVote);
@@ -58,12 +62,12 @@ public class AnswerManagementService {
     @Transactional
     public AnswerDTO addAnswer(int userId, int questionId, String text) {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
-        if(user.getIsBlocked()) return null;
+        if (user.getIsBlocked()) return null;
 
         Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
         AnswerDTO answerDTO = serviceHelper.getAnswerDTO(
-                repositoryFactory.createAnswerRepository().save(new Answer(userId,text,ZonedDateTime.now(),questionId,0)));
+                repositoryFactory.createAnswerRepository().save(new Answer(userId, text, ZonedDateTime.now(), questionId, 0)));
 
         eventPublisher.publishEvent(new AnswerCreatedEvent(answerDTO));
         return answerDTO;
@@ -74,7 +78,8 @@ public class AnswerManagementService {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         Answer answer = repositoryFactory.createAnswerRepository().findById(answerId).orElseThrow(AnswerNotFoundException::new);
 
-        if(!answer.getAuthorId().equals(user.getId()) && !user.getIsModerator()) throw new NotEnoughPermissionsException();
+        if (!answer.getAuthorId().equals(user.getId()) && !user.getIsModerator())
+            throw new NotEnoughPermissionsException();
 
         answer.setText(newText);
         AnswerDTO answerDTO = serviceHelper.getAnswerDTO(
@@ -89,7 +94,8 @@ public class AnswerManagementService {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         Answer answer = repositoryFactory.createAnswerRepository().findById(answerId).orElseThrow(AnswerNotFoundException::new);
 
-        if(!answer.getAuthorId().equals(user.getId()) && !user.getIsModerator()) throw new NotEnoughPermissionsException();
+        if (!answer.getAuthorId().equals(user.getId()) && !user.getIsModerator())
+            throw new NotEnoughPermissionsException();
 
         repositoryFactory.createAnswerRepository().remove(answer);
         eventPublisher.publishEvent(new AnswerDeletedEvent(answerId));

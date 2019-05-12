@@ -10,10 +10,10 @@ public class UserLoggedInDTO {
     private String username;
     private int score;
 
-    @JsonProperty(value="isModerator")
+    @JsonProperty(value = "isModerator")
     private boolean isModerator;
 
-    @JsonProperty(value="isBlocked")
+    @JsonProperty(value = "isBlocked")
     private boolean isBlocked;
 
     public static UserLoggedInDTO ofEntity(User user) {

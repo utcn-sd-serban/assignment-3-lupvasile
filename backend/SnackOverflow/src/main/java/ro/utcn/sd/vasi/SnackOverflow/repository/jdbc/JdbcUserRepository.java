@@ -1,10 +1,8 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import ro.utcn.sd.vasi.SnackOverflow.model.User;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.UserRepository;
-import ro.utcn.sd.vasi.SnackOverflow.repository.jdbc.JdbcGeneralRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +17,7 @@ public class JdbcUserRepository extends JdbcGeneralRepository<User> implements U
     @Override
     public Optional<User> findByUsername(String username) {
         List<User> users = template.query("SELECT * FROM " + tableName + " WHERE username = ?", rowMapper, username);
-        if(users.isEmpty()) return Optional.empty();
+        if (users.isEmpty()) return Optional.empty();
         return Optional.of(users.get(0));
     }
 }

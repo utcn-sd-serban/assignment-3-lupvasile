@@ -1,11 +1,8 @@
 package ro.utcn.sd.vasi.SnackOverflow.data_assembler;
 
 import ro.utcn.sd.vasi.SnackOverflow.model.Question;
-import ro.utcn.sd.vasi.SnackOverflow.model.Tag;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.QuestionRepository;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.RepositoryFactory;
-
-import java.util.Set;
 
 public class QuestionAssembler extends GeneralAssembler<Question, QuestionRepository> implements QuestionRepository {
 

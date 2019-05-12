@@ -4,7 +4,7 @@ import org.springframework.data.repository.Repository;
 import ro.utcn.sd.vasi.SnackOverflow.model.User;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.UserRepository;
 
-public interface DataUserRepository extends Repository<User,Integer>, UserRepository {
+public interface DataUserRepository extends Repository<User, Integer>, UserRepository {
     void delete(User element);
 
     @Override

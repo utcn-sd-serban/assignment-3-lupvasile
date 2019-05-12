@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.util.CollectionUtils;
 import ro.utcn.sd.vasi.SnackOverflow.model.Question;
 import ro.utcn.sd.vasi.SnackOverflow.model.Tag;
-import ro.utcn.sd.vasi.SnackOverflow.model.User;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

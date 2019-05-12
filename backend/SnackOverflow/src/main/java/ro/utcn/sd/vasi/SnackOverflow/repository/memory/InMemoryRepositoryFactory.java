@@ -2,9 +2,7 @@ package ro.utcn.sd.vasi.SnackOverflow.repository.memory;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-import ro.utcn.sd.vasi.SnackOverflow.model.VoteQuestion;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.*;
 
 @Component
@@ -17,6 +15,7 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
     private final InMemoryVoteAnswerRepository voteAnswerRepository = new InMemoryVoteAnswerRepository(this);
     private final InMemoryVoteQuestionRepository voteQuestionRepository = new InMemoryVoteQuestionRepository(this);
     private final InMemoryTagRepository tagRepository = new InMemoryTagRepository(this);
+
     @Override
     public QuestionRepository createQuestionRepository() {
         return questionRepository;

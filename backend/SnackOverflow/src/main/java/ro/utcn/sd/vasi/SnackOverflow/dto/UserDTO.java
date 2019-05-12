@@ -1,6 +1,5 @@
 package ro.utcn.sd.vasi.SnackOverflow.dto;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 import ro.utcn.sd.vasi.SnackOverflow.model.User;
 

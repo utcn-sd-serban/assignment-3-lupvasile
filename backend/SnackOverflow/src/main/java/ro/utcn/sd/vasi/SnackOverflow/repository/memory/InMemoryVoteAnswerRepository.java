@@ -3,7 +3,6 @@ package ro.utcn.sd.vasi.SnackOverflow.repository.memory;
 import ro.utcn.sd.vasi.SnackOverflow.model.VoteAnswer;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.VoteAnswerRepository;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

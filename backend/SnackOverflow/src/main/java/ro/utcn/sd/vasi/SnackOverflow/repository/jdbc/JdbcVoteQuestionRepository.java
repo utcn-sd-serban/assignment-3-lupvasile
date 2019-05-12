@@ -1,10 +1,8 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import ro.utcn.sd.vasi.SnackOverflow.model.VoteQuestion;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.VoteQuestionRepository;
-import ro.utcn.sd.vasi.SnackOverflow.repository.jdbc.JdbcGeneralRepository;
 
 import java.util.List;
 import java.util.Optional;

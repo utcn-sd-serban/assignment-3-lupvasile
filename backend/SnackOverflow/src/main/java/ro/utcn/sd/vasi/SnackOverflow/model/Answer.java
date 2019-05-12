@@ -1,6 +1,5 @@
 package ro.utcn.sd.vasi.SnackOverflow.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 @Data
 @Entity
 @NoArgsConstructor
-public class Answer implements HasIntId{
+public class Answer implements HasIntId {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,7 +25,7 @@ public class Answer implements HasIntId{
     private int voteCount = 0;
 
     public Answer(Integer authorId, String text, ZonedDateTime creationDateTime, Integer questionId, int voteCount) {
-        this(null,authorId,text,creationDateTime,questionId,voteCount);
+        this(null, authorId, text, creationDateTime, questionId, voteCount);
     }
 
     public Answer(Integer id, Integer authorId, String text, ZonedDateTime creationDateTime, Integer questionId, int voteCount) {

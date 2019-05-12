@@ -21,7 +21,7 @@ public class HibernateVoteQuestionRepository extends HibernateGeneralRepository<
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<VoteQuestion> query = builder.createQuery(currClass);
         Root<VoteQuestion> answerRoot = query.from(currClass);
-        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("postId"),id))).getResultList();
+        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("postId"), id))).getResultList();
     }
 
     /**
@@ -35,7 +35,7 @@ public class HibernateVoteQuestionRepository extends HibernateGeneralRepository<
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<VoteQuestion> query = builder.createQuery(currClass);
         Root<VoteQuestion> answerRoot = query.from(currClass);
-        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("cineDaId"),id))).getResultList();
+        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("cineDaId"), id))).getResultList();
     }
 
     @Override
@@ -58,9 +58,9 @@ public class HibernateVoteQuestionRepository extends HibernateGeneralRepository<
         CriteriaQuery<VoteQuestion> query = builder.createQuery(currClass);
         Root<VoteQuestion> answerRoot = query.from(currClass);
         List<VoteQuestion> res = entityManager.createQuery(query.select(answerRoot)
-                .where(builder.equal(answerRoot.get("cineDaId"),userId))
-                .where(builder.equal(answerRoot.get("postId"),postId))).getResultList();
-        if(res.isEmpty()) return Optional.empty();
+                .where(builder.equal(answerRoot.get("cineDaId"), userId))
+                .where(builder.equal(answerRoot.get("postId"), postId))).getResultList();
+        if (res.isEmpty()) return Optional.empty();
         else return Optional.of(res.get(0));
     }
 }

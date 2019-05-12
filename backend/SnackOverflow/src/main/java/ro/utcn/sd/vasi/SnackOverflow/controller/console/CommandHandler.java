@@ -28,6 +28,7 @@ public abstract class CommandHandler {
     }
 
     abstract boolean handleCommand(String command);
+
     void print(String text) {
         consoleController.print(text);
     }

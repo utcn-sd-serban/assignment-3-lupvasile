@@ -1,6 +1,5 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.memory;
 
-import lombok.RequiredArgsConstructor;
 import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
 import ro.utcn.sd.vasi.SnackOverflow.model.VoteAnswer;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.AnswerRepository;
@@ -15,13 +14,13 @@ public class InMemoryAnswerRepository extends InMemoryGeneralRepository<Answer> 
 
     @Override
     public List<Answer> findAllbyQuestionId(int questionId) {
-        return this.findAll().stream().filter(x->x.getQuestionId() == questionId).collect(Collectors.toList());
+        return this.findAll().stream().filter(x -> x.getQuestionId() == questionId).collect(Collectors.toList());
     }
 
     @Override
     public void remove(Answer element) {
         List<VoteAnswer> votes = factory.createAnswerVoteRepository().findAllVotesWithPostId(element.getId());
-        votes.forEach(v->factory.createAnswerVoteRepository().remove(v));
+        votes.forEach(v -> factory.createAnswerVoteRepository().remove(v));
 
         super.remove(element);
     }

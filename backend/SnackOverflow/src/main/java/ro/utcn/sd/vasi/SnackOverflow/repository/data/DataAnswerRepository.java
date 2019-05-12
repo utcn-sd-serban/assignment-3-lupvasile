@@ -1,14 +1,12 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.data;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.AnswerRepository;
 
 import java.util.List;
 
-public interface DataAnswerRepository extends Repository<Answer, Integer>, AnswerRepository{
+public interface DataAnswerRepository extends Repository<Answer, Integer>, AnswerRepository {
     void delete(Answer answer);
 
     @Override

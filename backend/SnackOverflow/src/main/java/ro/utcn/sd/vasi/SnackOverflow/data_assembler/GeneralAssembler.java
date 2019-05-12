@@ -15,7 +15,7 @@ public abstract class GeneralAssembler<T, R extends GeneralRepository<T>> implem
     @Override
     public List<T> findAll() {
         List<T> res = currRepo.findAll();
-        res.forEach(x->makeElementComplete(x));
+        res.forEach(x -> makeElementComplete(x));
         return res;
     }
 
@@ -32,7 +32,7 @@ public abstract class GeneralAssembler<T, R extends GeneralRepository<T>> implem
     @Override
     public Optional<T> findById(int id) {
         Optional<T> res = currRepo.findById(id);
-        if(res.isPresent()) makeElementComplete(res.get());
+        if (res.isPresent()) makeElementComplete(res.get());
         return res;
     }
 

@@ -16,18 +16,18 @@ public class AnswerController {
 
     @PostMapping("/questions/{questionId}/answers")
     public AnswerDTO addAnswer(@PathVariable int questionId, @RequestBody AnswerDTO answer) {
-        return answerManagementService.addAnswer(userManagementService.loadCurrentUser().getId(),questionId,answer.getText());
+        return answerManagementService.addAnswer(userManagementService.loadCurrentUser().getId(), questionId, answer.getText());
     }
 
     @DeleteMapping("/questions/{questionId}/answers/{answerId}")
     public void deleteAnswer(@PathVariable int answerId) {
-        answerManagementService.deleteAnswer(userManagementService.loadCurrentUser().getId(),answerId);
+        answerManagementService.deleteAnswer(userManagementService.loadCurrentUser().getId(), answerId);
     }
 
     //shoud this return AnswerDTO or should be void?
     @PutMapping("questions/{questionId}/answers/{answerId}")
     public AnswerDTO updateAnswer(@PathVariable int answerId, @RequestBody AnswerDTO answer) {
-        return answerManagementService.updateAnswerText(userManagementService.loadCurrentUser().getId(),answerId,answer.getText());
+        return answerManagementService.updateAnswerText(userManagementService.loadCurrentUser().getId(), answerId, answer.getText());
     }
 
     @GetMapping("/questions/{questionId}/answers")

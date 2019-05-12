@@ -2,7 +2,6 @@ package ro.utcn.sd.vasi.SnackOverflow.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import ro.utcn.sd.vasi.SnackOverflow.dto.AnswerDTO;
 import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
 import ro.utcn.sd.vasi.SnackOverflow.model.Answer;

@@ -20,7 +20,7 @@ public class HibernateVoteAnswerRepository extends HibernateGeneralRepository<Vo
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<VoteAnswer> query = builder.createQuery(currClass);
         Root<VoteAnswer> answerRoot = query.from(currClass);
-        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("postId"),id))).getResultList();
+        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("postId"), id))).getResultList();
     }
 
     /**
@@ -34,7 +34,7 @@ public class HibernateVoteAnswerRepository extends HibernateGeneralRepository<Vo
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<VoteAnswer> query = builder.createQuery(currClass);
         Root<VoteAnswer> answerRoot = query.from(currClass);
-        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("cineDaId"),id))).getResultList();
+        return entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("cineDaId"), id))).getResultList();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class HibernateVoteAnswerRepository extends HibernateGeneralRepository<Vo
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<VoteAnswer> query = builder.createQuery(currClass);
         Root<VoteAnswer> answerRoot = query.from(currClass);
-        List<VoteAnswer> res = entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("cinePrimesteId"),userId))).getResultList();
+        List<VoteAnswer> res = entityManager.createQuery(query.select(answerRoot).where(builder.equal(answerRoot.get("cinePrimesteId"), userId))).getResultList();
         return res;
     }
 
@@ -52,9 +52,9 @@ public class HibernateVoteAnswerRepository extends HibernateGeneralRepository<Vo
         CriteriaQuery<VoteAnswer> query = builder.createQuery(currClass);
         Root<VoteAnswer> answerRoot = query.from(currClass);
         List<VoteAnswer> res = entityManager.createQuery(query.select(answerRoot)
-                .where(builder.equal(answerRoot.get("cineDaId"),userId))
-                .where(builder.equal(answerRoot.get("postId"),postId))).getResultList();
-        if(res.isEmpty()) return Optional.empty();
+                .where(builder.equal(answerRoot.get("cineDaId"), userId))
+                .where(builder.equal(answerRoot.get("postId"), postId))).getResultList();
+        if (res.isEmpty()) return Optional.empty();
         else return Optional.of(res.get(0));
     }
 }

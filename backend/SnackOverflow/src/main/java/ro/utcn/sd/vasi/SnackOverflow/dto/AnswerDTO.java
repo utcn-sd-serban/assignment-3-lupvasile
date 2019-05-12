@@ -2,7 +2,6 @@ package ro.utcn.sd.vasi.SnackOverflow.dto;
 
 import lombok.Data;
 import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
-import ro.utcn.sd.vasi.SnackOverflow.model.User;
 
 import java.time.format.DateTimeFormatter;
 

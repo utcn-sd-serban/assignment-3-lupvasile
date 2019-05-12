@@ -1,4 +1,5 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.memory;
+
 import lombok.RequiredArgsConstructor;
 import ro.utcn.sd.vasi.SnackOverflow.model.HasIntId;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.GeneralRepository;
@@ -13,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class InMemoryGeneralRepository<T extends HasIntId> implements GeneralRepository<T> {
     protected final InMemoryRepositoryFactory factory;
-    private final Map<Integer,T> data = new ConcurrentHashMap<>();
+    private final Map<Integer, T> data = new ConcurrentHashMap<>();
     private final AtomicInteger currentId = new AtomicInteger(0);
 
     @Override

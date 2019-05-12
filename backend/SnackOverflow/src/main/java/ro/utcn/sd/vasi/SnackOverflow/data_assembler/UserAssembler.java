@@ -14,9 +14,9 @@ public class UserAssembler extends GeneralAssembler<User, UserRepository> implem
     @Override
     protected User makeElementComplete(User element) {
         int voteCount = ScoreCalcuator.computeUserScore(repositoryFactory.createQuestionVoteRepository().findAllVotesTowardsUserId(element.getId()),
-                                                        repositoryFactory.createAnswerVoteRepository().findAllVotesTowardsUserId(element.getId()),
-                                                        repositoryFactory.createQuestionVoteRepository().findAllVotesFromUserId(element.getId()),
-                                                        repositoryFactory.createAnswerVoteRepository().findAllVotesFromUserId(element.getId()));
+                repositoryFactory.createAnswerVoteRepository().findAllVotesTowardsUserId(element.getId()),
+                repositoryFactory.createQuestionVoteRepository().findAllVotesFromUserId(element.getId()),
+                repositoryFactory.createAnswerVoteRepository().findAllVotesFromUserId(element.getId()));
         element.setScore(voteCount);
         return element;
     }

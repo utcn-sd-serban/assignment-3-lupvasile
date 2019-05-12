@@ -2,14 +2,10 @@ package ro.utcn.sd.vasi.SnackOverflow.repository.memory;
 
 import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
 import ro.utcn.sd.vasi.SnackOverflow.model.Question;
-import ro.utcn.sd.vasi.SnackOverflow.model.Tag;
 import ro.utcn.sd.vasi.SnackOverflow.model.VoteQuestion;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.QuestionRepository;
 
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 public class InMemoryQuestionRepository extends InMemoryGeneralRepository<Question> implements QuestionRepository {
 
@@ -20,10 +16,10 @@ public class InMemoryQuestionRepository extends InMemoryGeneralRepository<Questi
     @Override
     public void remove(Question element) {
         List<VoteQuestion> votes = factory.createQuestionVoteRepository().findAllVotesWithPostId(element.getId());
-        votes.forEach(v->factory.createQuestionVoteRepository().remove(v));
+        votes.forEach(v -> factory.createQuestionVoteRepository().remove(v));
 
         List<Answer> answers = factory.createAnswerRepository().findAllbyQuestionId(element.getId());
-        answers.forEach(a->factory.createAnswerRepository().remove(a));
+        answers.forEach(a -> factory.createAnswerRepository().remove(a));
 
         super.remove(element);
     }

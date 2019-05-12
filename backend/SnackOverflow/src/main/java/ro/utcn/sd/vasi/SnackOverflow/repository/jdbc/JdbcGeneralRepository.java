@@ -1,7 +1,5 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.jdbc;
 
-import com.sun.rowset.internal.Row;
-import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -21,8 +19,8 @@ import java.util.Optional;
 //is it wrong to use same rowmapper?
 public class JdbcGeneralRepository<T extends HasIntId> implements GeneralRepository<T> {
     protected final JdbcTemplate template;
-    private final Class<T> currClass;
     protected final RowMapper<T> rowMapper;
+    private final Class<T> currClass;
     protected String tableName;
 
     public JdbcGeneralRepository(JdbcTemplate template, Class<T> currClass, RowMapper<T> rowMapper) {
@@ -30,7 +28,7 @@ public class JdbcGeneralRepository<T extends HasIntId> implements GeneralReposit
         this.currClass = currClass;
         this.rowMapper = rowMapper;
 
-        if(currClass.isAnnotationPresent(Table.class)) {
+        if (currClass.isAnnotationPresent(Table.class)) {
             tableName = currClass.getAnnotation(Table.class).name();
         } else {
             tableName = camelCaseToUnderscore(currClass.getSimpleName());
@@ -45,7 +43,7 @@ public class JdbcGeneralRepository<T extends HasIntId> implements GeneralReposit
 
     @Override
     public T save(T element) {
-        if(element.getId() == null) {
+        if (element.getId() == null) {
             element.setId(insert(element));
         } else {
             update(element);
@@ -69,13 +67,13 @@ public class JdbcGeneralRepository<T extends HasIntId> implements GeneralReposit
         SimpleJdbcInsert insert = new SimpleJdbcInsert(template);
         insert.setTableName(tableName);
         insert.usingGeneratedKeyColumns("id");
-        Map<String,Object> map = getElementMap(element);
+        Map<String, Object> map = getElementMap(element);
         map.remove("id");
         return insert.executeAndReturnKey(map).intValue();
     }
 
     protected void update(T element) {
-        Map<String,Object> map = getElementMap(element);
+        Map<String, Object> map = getElementMap(element);
         int id = (Integer) map.get("id");
         map.remove("id");
 
@@ -85,16 +83,17 @@ public class JdbcGeneralRepository<T extends HasIntId> implements GeneralReposit
         statementBuild.append("UPDATE " + tableName + " SET ");
 
         int i = 0;
-        for(Map.Entry<String,Object> e : map.entrySet()) {
+        for (Map.Entry<String, Object> e : map.entrySet()) {
             statementBuild.append(e.getKey() + " = ?,");
             statementArgs[i++] = e.getValue();
         }
 
-        statementBuild.deleteCharAt(statementBuild.length()-1);
-        statementBuild.append(" WHERE id = "+ id);
+        statementBuild.deleteCharAt(statementBuild.length() - 1);
+        statementBuild.append(" WHERE id = " + id);
 
-        template.update(statementBuild.toString(),statementArgs);
+        template.update(statementBuild.toString(), statementArgs);
     }
+
     private String camelCaseToUnderscore(String name) {
         String regex = "([a-z])([A-Z]+)";
         String replacement = "$1_$2";
@@ -102,32 +101,32 @@ public class JdbcGeneralRepository<T extends HasIntId> implements GeneralReposit
     }
 
     Map<String, Object> getElementMap(T element) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         Method[] methods = currClass.getMethods();
-        for(Method m : methods) {
+        for (Method m : methods) {
             String methodName = m.getName();
-            if(methodName.equals("getClass")) continue;
-            if(!(methodName.startsWith("is") || methodName.startsWith("get"))) continue;
+            if (methodName.equals("getClass")) continue;
+            if (!(methodName.startsWith("is") || methodName.startsWith("get"))) continue;
 
             String fieldName;
-            if(methodName.startsWith("get")) fieldName = methodName.replaceFirst("get","");
-            else fieldName = methodName.replaceFirst("is","");
-            fieldName = fieldName.substring(0,1).toLowerCase() + fieldName.substring(1);
+            if (methodName.startsWith("get")) fieldName = methodName.replaceFirst("get", "");
+            else fieldName = methodName.replaceFirst("is", "");
+            fieldName = fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
 
             try {
                 Field field = currClass.getDeclaredField(fieldName);
 
-                if(field.isAnnotationPresent(Transient.class) || field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToOne.class) ||
-                    field.isAnnotationPresent(ManyToMany.class)) continue;
+                if (field.isAnnotationPresent(Transient.class) || field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToOne.class) ||
+                        field.isAnnotationPresent(ManyToMany.class)) continue;
 
-                if(field.isAnnotationPresent(Column.class)) {
+                if (field.isAnnotationPresent(Column.class)) {
                     fieldName = field.getAnnotation(Column.class).name();
                 } else {
                     fieldName = camelCaseToUnderscore(fieldName);
                 }
 
-                if(field.getType().equals(ZonedDateTime.class)) map.put(fieldName,m.invoke(element).toString());
-                else map.put(fieldName,m.invoke(element));
+                if (field.getType().equals(ZonedDateTime.class)) map.put(fieldName, m.invoke(element).toString());
+                else map.put(fieldName, m.invoke(element));
 
             } catch (NoSuchFieldException e) {
                 System.out.println("field " + fieldName + " is not present on object");

@@ -4,6 +4,6 @@ import ro.utcn.sd.vasi.SnackOverflow.model.Answer;
 
 import java.util.List;
 
-public interface AnswerRepository extends GeneralRepository<Answer>{
+public interface AnswerRepository extends GeneralRepository<Answer> {
     List<Answer> findAllbyQuestionId(int questionId);
 }

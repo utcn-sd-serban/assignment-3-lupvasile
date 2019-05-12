@@ -1,10 +1,8 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.jpa;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import ro.utcn.sd.vasi.SnackOverflow.model.VoteAnswer;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.*;
 
 import javax.persistence.EntityManager;

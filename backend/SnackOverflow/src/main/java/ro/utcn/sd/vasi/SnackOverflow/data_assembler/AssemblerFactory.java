@@ -1,6 +1,5 @@
 package ro.utcn.sd.vasi.SnackOverflow.data_assembler;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
@@ -10,7 +9,7 @@ import ro.utcn.sd.vasi.SnackOverflow.repository.api.*;
 @Component
 @Primary
 @ConditionalOnProperty(name = "snack_overflow.use-assembler", havingValue = "TRUE")
-public class AssemblerFactory implements RepositoryFactory{
+public class AssemblerFactory implements RepositoryFactory {
     private final RepositoryFactory repositoryFactory;
 
     private final AnswerAssembler answerAssembler;
@@ -26,8 +25,8 @@ public class AssemblerFactory implements RepositoryFactory{
         answerAssembler = new AnswerAssembler(repositoryFactory.createAnswerRepository(), repositoryFactory);
         questionAssembler = new QuestionAssembler(repositoryFactory.createQuestionRepository(), repositoryFactory);
         userAssembler = new UserAssembler(repositoryFactory.createUserRepository(), repositoryFactory);
-        voteAnswerAssembler = new VoteAnswerAssembler(repositoryFactory.createAnswerVoteRepository(),repositoryFactory);
-        voteQuestionAssembler = new VoteQuestionAssembler(repositoryFactory.createQuestionVoteRepository(),repositoryFactory);
+        voteAnswerAssembler = new VoteAnswerAssembler(repositoryFactory.createAnswerVoteRepository(), repositoryFactory);
+        voteQuestionAssembler = new VoteQuestionAssembler(repositoryFactory.createQuestionVoteRepository(), repositoryFactory);
         tagAssembler = new TagAssembler(repositoryFactory.createTagRepository(), repositoryFactory);
     }
 

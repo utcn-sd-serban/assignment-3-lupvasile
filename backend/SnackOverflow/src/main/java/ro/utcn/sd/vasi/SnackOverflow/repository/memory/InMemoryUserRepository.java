@@ -4,7 +4,6 @@ import ro.utcn.sd.vasi.SnackOverflow.model.User;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.UserRepository;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class InMemoryUserRepository extends InMemoryGeneralRepository<User> implements UserRepository {
     public InMemoryUserRepository(InMemoryRepositoryFactory factory) {
@@ -14,6 +13,6 @@ public class InMemoryUserRepository extends InMemoryGeneralRepository<User> impl
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return this.findAll().stream().filter(x->x.getUsername().equals(username)).findAny();
+        return this.findAll().stream().filter(x -> x.getUsername().equals(username)).findAny();
     }
 }

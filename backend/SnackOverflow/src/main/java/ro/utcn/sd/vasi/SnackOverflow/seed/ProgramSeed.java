@@ -2,11 +2,9 @@ package ro.utcn.sd.vasi.SnackOverflow.seed;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,13 +39,13 @@ public class ProgramSeed implements CommandLineRunner {
         addAnswers();
     }
 
-    private void addUsers(){
+    private void addUsers() {
         UserRepository repository = factory.createUserRepository();
-        if(repository.findAll().isEmpty()) {
-            repository.save(new User(null, "u1",passwordEncoder.encode("pass"),0,false,false));
-            repository.save(new User(null, "u2",passwordEncoder.encode("pass"),0,true,false));
-            repository.save(new User(null, "u3",passwordEncoder.encode("pass"),0,false,false));
-            repository.save(new User(null, "u4",passwordEncoder.encode("pass"),0,false,true));
+        if (repository.findAll().isEmpty()) {
+            repository.save(new User(null, "u1", passwordEncoder.encode("pass"), 0, false, false));
+            repository.save(new User(null, "u2", passwordEncoder.encode("pass"), 0, true, false));
+            repository.save(new User(null, "u3", passwordEncoder.encode("pass"), 0, false, false));
+            repository.save(new User(null, "u4", passwordEncoder.encode("pass"), 0, false, true));
         }
     }
 
@@ -55,10 +53,10 @@ public class ProgramSeed implements CommandLineRunner {
         QuestionRepository repository = factory.createQuestionRepository();
 
         User u = factory.createUserRepository().findAll().get(0);
-        if(repository.findAll().isEmpty()) {
-            questionManagementService.addQuestion(1,"question 1","ana are mere multe1",new HashSet<>(Arrays.asList(new Tag("tag1"),new Tag("tag2"),new Tag("tag3"))));
-            questionManagementService.addQuestion(2,"question 2","ana are mere multe2",new HashSet<>(Arrays.asList(new Tag("tag2"))));
-            questionManagementService.addQuestion(3,"question 3","ana are mere multe3",new HashSet<>(Arrays.asList(new Tag("tag3"))));
+        if (repository.findAll().isEmpty()) {
+            questionManagementService.addQuestion(1, "question 1", "ana are mere multe1", new HashSet<>(Arrays.asList(new Tag("tag1"), new Tag("tag2"), new Tag("tag3"))));
+            questionManagementService.addQuestion(2, "question 2", "ana are mere multe2", new HashSet<>(Arrays.asList(new Tag("tag2"))));
+            questionManagementService.addQuestion(3, "question 3", "ana are mere multe3", new HashSet<>(Arrays.asList(new Tag("tag3"))));
         }
     }
 
@@ -67,10 +65,10 @@ public class ProgramSeed implements CommandLineRunner {
         User u = factory.createUserRepository().findAll().get(0);
         Question q = factory.createQuestionRepository().findAll().get(0);
 
-        if(repository.findAll().isEmpty()) {
-            answerManagementService.addAnswer(1,q.getId(),"answer 1");
-            answerManagementService.addAnswer(2,q.getId(),"answer 2");
-            answerManagementService.addAnswer(3,q.getId(),"answer 3");
+        if (repository.findAll().isEmpty()) {
+            answerManagementService.addAnswer(1, q.getId(), "answer 1");
+            answerManagementService.addAnswer(2, q.getId(), "answer 2");
+            answerManagementService.addAnswer(3, q.getId(), "answer 3");
         }
     }
 }

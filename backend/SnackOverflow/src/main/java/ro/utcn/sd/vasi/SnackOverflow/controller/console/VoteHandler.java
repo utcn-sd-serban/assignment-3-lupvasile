@@ -35,9 +35,9 @@ public class VoteHandler extends CommandHandler {
 
         Boolean success;
         Boolean send = vote == 1;
-        success = answerManagementService.sendVote(currentUser.getId(),id,send);
+        success = answerManagementService.sendVote(currentUser.getId(), id, send);
 
-        if(success) print("new vote saved");
+        if (success) print("new vote saved");
         else print("vote already existent or tried to vote self");
     }
 
@@ -52,9 +52,9 @@ public class VoteHandler extends CommandHandler {
 
         Boolean success;
         Boolean send = vote == 1;
-        success = questionManagementService.sendVote(currentUser.getId(),id,send);
+        success = questionManagementService.sendVote(currentUser.getId(), id, send);
 
-        if(success) print("new vote saved");
+        if (success) print("new vote saved");
         else print("vote already existent or tried to vote self");
     }
 }

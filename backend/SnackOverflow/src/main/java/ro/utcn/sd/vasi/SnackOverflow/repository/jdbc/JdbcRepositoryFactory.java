@@ -1,11 +1,9 @@
 package ro.utcn.sd.vasi.SnackOverflow.repository.jdbc;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ro.utcn.sd.vasi.SnackOverflow.model.VoteAnswer;
 import ro.utcn.sd.vasi.SnackOverflow.repository.api.*;
 
 
@@ -30,7 +28,7 @@ public class JdbcRepositoryFactory implements RepositoryFactory {
         voteAnswerRepository = new JdbcVoteAnswerRepository(jdbcTemplate);
         voteQuestionRepository = new JdbcVoteQuestionRepository(jdbcTemplate);
         tagRepository = new JdbcTagRepository(jdbcTemplate);
-        questionRepository = new JdbcQuestionRepository(jdbcTemplate,tagRepository);
+        questionRepository = new JdbcQuestionRepository(jdbcTemplate, tagRepository);
 
     }
 

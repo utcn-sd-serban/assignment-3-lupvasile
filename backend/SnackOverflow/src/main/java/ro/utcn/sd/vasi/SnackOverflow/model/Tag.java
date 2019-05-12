@@ -3,7 +3,6 @@ package ro.utcn.sd.vasi.SnackOverflow.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -12,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "tag_names")
-public class Tag implements Comparable, HasIntId{
+public class Tag implements Comparable, HasIntId {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,8 +24,8 @@ public class Tag implements Comparable, HasIntId{
 
     @Override
     public int compareTo(Object o) {
-        if(!(o instanceof Tag)) return -1;
-        return ((Tag)o).name.compareTo(name);
+        if (!(o instanceof Tag)) return -1;
+        return ((Tag) o).name.compareTo(name);
     }
 
     @Override

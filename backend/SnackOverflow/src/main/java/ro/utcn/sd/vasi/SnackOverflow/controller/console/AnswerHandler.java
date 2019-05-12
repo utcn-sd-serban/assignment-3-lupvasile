@@ -4,7 +4,7 @@ import ro.utcn.sd.vasi.SnackOverflow.services.AnswerManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.QuestionManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.UserManagementService;
 
-public class AnswerHandler extends CommandHandler{
+public class AnswerHandler extends CommandHandler {
     public AnswerHandler(ConsoleController consoleController, AnswerManagementService answerManagementService, QuestionManagementService questionManagementService, UserManagementService userManagementService) {
         super(consoleController, answerManagementService, questionManagementService, userManagementService);
     }
@@ -34,7 +34,7 @@ public class AnswerHandler extends CommandHandler{
         print("Enter answer text");
         String text = scanner.nextLine().trim();
 
-        answerManagementService.addAnswer(currentUser.getId(),questionId,text);
+        answerManagementService.addAnswer(currentUser.getId(), questionId, text);
         print("Answer successfully added");
     }
 
@@ -43,7 +43,7 @@ public class AnswerHandler extends CommandHandler{
         int answerId = scanner.nextInt();
         scanner.nextLine();
 
-        answerManagementService.deleteAnswer(currentUser.getId(),answerId);
+        answerManagementService.deleteAnswer(currentUser.getId(), answerId);
     }
 
     private void handleUpdateAnswerText() {
@@ -54,6 +54,6 @@ public class AnswerHandler extends CommandHandler{
         print("Enter new answer text");
         String newText = scanner.nextLine().trim();
 
-        answerManagementService.updateAnswerText(currentUser.getId(),answerId,newText);
+        answerManagementService.updateAnswerText(currentUser.getId(), answerId, newText);
     }
 }

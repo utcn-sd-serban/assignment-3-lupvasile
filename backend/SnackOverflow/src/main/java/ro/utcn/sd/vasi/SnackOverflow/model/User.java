@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements HasIntId{
+public class User implements HasIntId {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
