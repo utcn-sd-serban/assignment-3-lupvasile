@@ -71,8 +71,16 @@ class QuestionPresenter {
         questionModel.voteQuestion(questionId, vote);
     }
 
-    onInit() {
+    onInitAllQuestions() {
         questionModel.loadAllQuestions();
+    }
+
+    onInitFilterByTitle(title) {
+        questionModel.loadFilteredByTitle(title);
+    }
+
+    onInitFilterByTags(tags) {
+        questionModel.loadFilteredByTags(tags);
     }
 
     onInitDetails(questionId) {

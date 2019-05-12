@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import model from "../../model/model";
 import questionPresenter from "../../presenter/QuestionPresenter";
 import QuestionList from "./QuestionList";
@@ -8,7 +8,7 @@ const mapModelStateToComponentState = (modelState, props) => ({
         : props.match.params.filterType === "filterByTitle" ? model.filterQuestionsByTitleInLocalState(props.match.params.filterText)
             : model.filterQuestionByTagCommaSeparatedInLocalState(props.match.params.filterText),
     user: modelState.currentUser,
-    questionSearchText: modelState.questionSearchText
+    questionSearchText: modelState.questionSearchText,
 });
 
 export default class SmartQuestionList extends Component {
@@ -20,7 +20,7 @@ export default class SmartQuestionList extends Component {
     }
 
     componentWillMount() {
-        questionPresenter.onInit();
+        questionPresenter.onInitAllQuestions();
     }
 
     componentDidUpdate(prev) {
@@ -36,11 +36,11 @@ export default class SmartQuestionList extends Component {
     render() {
         return (
             <QuestionList questions={this.state.questions}
-                onViewDetails={questionPresenter.onViewDetails}
-                questionSearchText={this.state.questionSearchText}
-                onChangeSearchText={questionPresenter.onChangeSearchText}
-                onSearchByTag={questionPresenter.onSearchByTag}
-                onSearchByTitle={questionPresenter.onSearchByTitle}
+                          onViewDetails={questionPresenter.onViewDetails}
+                          questionSearchText={this.state.questionSearchText}
+                          onChangeSearchText={questionPresenter.onChangeSearchText}
+                          onSearchByTag={questionPresenter.onSearchByTag}
+                          onSearchByTitle={questionPresenter.onSearchByTitle}
             />
         );
     }

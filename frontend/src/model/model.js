@@ -24,7 +24,7 @@ class Model extends EventEmitter {
         var currUserInd = 1;
         this.client = new RestClientFactory(localUsers[currUserInd].username, localUsers[currUserInd].password);
         this.listener = new WebSocketListener(localUsers[currUserInd].username, localUsers[currUserInd].password);
-        this.listener.on("event",e => webSocketListener(e));
+        this.listener.on("event", e => webSocketListener(e));
 
         this.state = {
             users: localUsers,
@@ -61,7 +61,7 @@ class Model extends EventEmitter {
         };
     }
 
-    banUser(requesterUserId, bannedUserId) {
+    banUserToLocalState(bannedUserId) {
         this.state.users.find(u => u.id === bannedUserId).isBlocked = true;
         this.emit("change", this.state);
     }
@@ -74,25 +74,17 @@ class Model extends EventEmitter {
         return this.state.answers.find(a => a.id === answerId);
     }
 
-    sendVoteAnswerToLocalState(userId, answerId, voteType) {
-        var answer = this.getAnswer(answerId);
-        if (voteType) {
-            answer.voteCount++;
-            answer.author.score++;
-            this.state.users.find(u => u.id === userId).score++;
-        } else {
-            answer.voteCount--;
-            answer.author.score--;
-            this.state.users.find(u => u.id === userId).score--;
-        }
+    sendVoteAnswerToLocalState(votedAnswer) {
+        var answer = this.getAnswer(votedAnswer.id);
+        answer.voteCount = votedAnswer.voteCount;
 
         this.emit("change", this.state);
     }
 
-    addAnswerToLocalState(id, author, text, questionId) {
+    addAnswerToLocalState(answer) {
         this.state = {
             ...this.state,
-            answers: [makeAnswer(id, author, text, "04/05/29", questionId, 0)].concat(this.state.answers)
+            answers: [{...answer}].concat(this.state.answers)
         };
 
         this.emit("change", this.state);
@@ -149,7 +141,7 @@ class Model extends EventEmitter {
 
     filterQuestionByTagCommaSeparatedInLocalState(tagText) {
         var tags = tagText.trim().split(',');
-        return this.filterQuestionsByTag(tags);
+        return this.filterQuestionsByTagInLocalState(tags);
     }
 
     filterQuestionsByTagInLocalState(tags) {
@@ -165,16 +157,12 @@ class Model extends EventEmitter {
         return res;
     }
 
-    addQuestionToLocalState(id, author, title, text, tags) {
+    addQuestionToLocalState(question) {
         this.state = {
             ...this.state,
-            questions: [makeQuestion(id, author, title, text, "04/05/29", tags, 0)].concat(this.state.questions)
+            questions: [question].concat(this.state.questions)
         };
 
-        /*this.state = {
-            ...this.state,
-            tags: this.makeTagsList()
-        };*/
         this.emit("change", this.state);
     }
 
@@ -207,17 +195,9 @@ class Model extends EventEmitter {
         this.emit("change", this.state);
     }
 
-    sendVoteQuestionToLocalState(userId, questionId, voteType) {
-        var question = this.getQuestion(questionId);
-        if (voteType) {
-            question.voteCount++;
-            question.author.score++;
-            this.state.users.find(u => u.id === userId).score++;
-        } else {
-            question.voteCount--;
-            question.author.score--;
-            this.state.users.find(u => u.id === userId).score--;
-        }
+    sendVoteQuestionToLocalState(votedQuestion) {
+        var question = this.getQuestion(votedQuestion.id);
+        question.voteCount = votedQuestion.voteCount;
 
         this.emit("change", this.state);
     }
@@ -262,7 +242,7 @@ class Model extends EventEmitter {
         return this.client.createLoginClient().loadCurrentLoggedUser().then(user => {
             if (!user) return false;
 
-            this.listener = new WebSocketListener(username,password);
+            this.listener = new WebSocketListener(username, password);
             this.listener.on("event", event => webSocketListener(event));
             this.state = {
                 ...this.state,
@@ -285,15 +265,72 @@ class Model extends EventEmitter {
         };
         this.emit("change", this.state);
     }
+
+    updateUserInfo(newUserData) {
+        this.state = {
+            ...this.state,
+            users: this.state.users.map(u => u.id === newUserData.id ? {
+                ...u,
+                score: newUserData.score,
+                username: newUserData.username
+            } : {...u}),
+
+            questions: this.state.questions.map(q => q.author.id === newUserData.id ? {
+                ...q,
+                author: {...newUserData}
+            } : {...q}),
+
+            answers: this.state.answers.map(a => a.author.id === newUserData.id ? {
+                ...a,
+                author: {...newUserData}
+            } : {...a}),
+
+            currentUser: this.state.currentUser.id === newUserData.id ? {
+                ...this.state.currentUser,
+                score: newUserData.score
+            } : this.state.currentUser
+        };
+
+        this.emit("change", this.state);
+    }
 }
 
 const model = new Model();
 
 function webSocketListener(event) {
     {
-        console.log(event.type.toString());
-        if (event.type === "STUDENT_CREATED") {
-            model.appendStudent(event.student);
+        switch (event.type) {
+            case "ANSWER_CREATED":
+                model.addAnswerToLocalState(event.answerDTO);
+                break;
+            case "ANSWER_DELETED":
+                model.deleteAnswerToLocalState(event.answerId);
+                break;
+            case "ANSWER_UPDATED":
+                model.updateAnswerTextToLocalState(event.answerDTO.id, event.answerDTO.text);
+                break;
+            case "QUESTION_CREATED":
+                model.addQuestionToLocalState(event.questionDTO);
+                break;
+            case "QUESTION_DELETED":
+                model.deleteQuestionToLocalState(event.questionId);
+                break;
+            case "QUESTION_UPDATED":
+                model.updateQuestionToLocalState(event.questionDTO.id, event.questionDTO.title, event.questionDTO.text);
+                break;
+            case "USER_UPDATED":
+                model.updateUserInfo(event.userDTO);
+                break;
+            case "VOTED_ANSWER":
+                model.sendVoteAnswerToLocalState(event.answerDTO);
+                break;
+            case "VOTED_QUESTION":
+                model.sendVoteQuestionToLocalState(event.questionDTO);
+                break;
+
+            case "USER_BANNED":
+                model.banUserToLocalState(event.userId);
+
         }
     }
 }

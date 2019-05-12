@@ -67,7 +67,7 @@ export default class RestClientQuestions {
     }
 
     loadFilteredByTags(tagsAsString) {
-        return fetch(this.BASE_URL + "/questions/filterByTags/" + tagsAsString, {
+        return fetch(this.BASE_URL + "/questions/findByTags/" + tagsAsString, {
             method: "GET",
             headers: {
                 "Authorization": this.authorization
@@ -79,7 +79,7 @@ export default class RestClientQuestions {
     }
 
     loadFilteredByTitle(title) {
-        return fetch(this.BASE_URL + "/questions/filterByTitle/" + title, {
+        return fetch(this.BASE_URL + "/questions/findByTitle/" + title, {
             method: "GET",
             headers: {
                 "Authorization": this.authorization

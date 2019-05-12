@@ -15,6 +15,10 @@ export default class SmartUserList extends Component {
         model.addListener("change", this.listener);
     }
 
+    componentWillMount() {
+        userPresenter.onInit();
+    }
+
     componentWillUnmount() {
         model.removeListener("change", this.listener);
     }

@@ -1,8 +1,13 @@
 import model from "../model/model";
+import userModel from "../model/userModel";
 
 class UserPresenter {
     onBan(bannedUserId) {
-        model.banUser(model.state.currentUser.id, bannedUserId);
+        userModel.banUser(bannedUserId);
+    }
+
+    onInit() {
+        userModel.loadAllUsers();
     }
 }
 
