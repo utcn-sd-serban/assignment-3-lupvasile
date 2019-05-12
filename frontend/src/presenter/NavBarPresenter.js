@@ -1,4 +1,5 @@
 import model from "../model/model";
+import invoker from "../command/invoker";
 
 class NavBarPresenter {
     onLogout() {
@@ -16,6 +17,14 @@ class NavBarPresenter {
 
     onBanUsers() {
         window.location.assign("#/ban-users");
+    }
+
+    onUndo() {
+        invoker.undo();
+    }
+
+    onRedo() {
+        invoker.redo();
     }
 }
 

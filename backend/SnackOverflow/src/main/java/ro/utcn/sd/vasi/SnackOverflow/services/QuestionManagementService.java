@@ -129,7 +129,7 @@ public class QuestionManagementService {
         User user = repositoryFactory.createUserRepository().findById(userId).orElseThrow(UserNotFoundException::new);
         Question question = repositoryFactory.createQuestionRepository().findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
-        if(!question.getAuthorId().equals(user.getId()) && !user.getIsModerator()) throw new NotEnoughPermissionsException();
+        if(!user.getIsModerator()) throw new NotEnoughPermissionsException();
 
         repositoryFactory.createQuestionRepository().remove(question);
         eventPublisher.publishEvent(new QuestionDeletedEvent(questionId));

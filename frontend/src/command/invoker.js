@@ -14,7 +14,7 @@ class Invoker {
             this.lastInstrInd--;
         }
 
-        this.commands[this.lastInstrInd] = {...command};
+        this.commands[this.lastInstrInd] = command;
 
         return result;
     }
@@ -30,6 +30,10 @@ class Invoker {
     redo() {
         if (this.lastInstrInd + 1 >= this.maxHistorySize) return;
         this.lastInstrInd++;
+        if (!this.commands[this.lastInstrInd]) {
+            this.lastInstrInd--;
+            return;
+        }
 
         return this.commands[this.lastInstrInd].execute();
     }

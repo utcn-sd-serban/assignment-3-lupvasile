@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import model from "../../model/model";
 import navBarPresenter from "../../presenter/NavBarPresenter";
 import NavBar from "./NavBar";
@@ -24,10 +24,12 @@ export default class SmartNavBar extends Component {
         return (
             <div>
                 <NavBar user={this.state.currentUser}
-                    onLogout={navBarPresenter.onLogout}
-                    onAddQuestion={navBarPresenter.onAddQuestion}
-                    onAllQuestions={navBarPresenter.onAllQuestions}
-                    onBanUsers={navBarPresenter.onBanUsers}
+                        onLogout={navBarPresenter.onLogout}
+                        onAddQuestion={navBarPresenter.onAddQuestion}
+                        onAllQuestions={navBarPresenter.onAllQuestions}
+                        onBanUsers={navBarPresenter.onBanUsers}
+                        onUndo={navBarPresenter.onUndo}
+                        onRedo={navBarPresenter.onRedo}
                 />
             </div>
         );

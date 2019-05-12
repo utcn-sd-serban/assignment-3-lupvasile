@@ -18,19 +18,11 @@ const makeAnswer = (id, author, text, creationDateTime, questionId, voteCount) =
 class Model extends EventEmitter {
     constructor() {
         super();
-        var localUsers = [makeUser(1, "u1", "pass", 0, false, false),
-            makeUser(2, "u2", "pass", 0, true, false),
-            makeUser(3, "u3", "pass", 0, false, true)];
-
-        var currUserInd = 1;
-        this.client = new RestClientFactory(localUsers[currUserInd].username, localUsers[currUserInd].password);
-        this.listener = new WebSocketListener(localUsers[currUserInd].username, localUsers[currUserInd].password);
-        this.listener.on("event", e => webSocketListener(e));
 
         this.state = {
-            users: localUsers,
+            users: [],
 
-            currentUser: localUsers[1],
+            currentUser: null,
 
             loginUser: {
                 username: "",

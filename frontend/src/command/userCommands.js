@@ -8,6 +8,9 @@ class BanUserCommand {
     execute() {
         return userModel.banUser(this.bannedUserId);
     }
+
+    undo() {
+    }
 }
 
 export {BanUserCommand};
