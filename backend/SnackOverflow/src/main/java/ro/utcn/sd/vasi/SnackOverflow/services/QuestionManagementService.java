@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
 import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
+import ro.utcn.sd.vasi.SnackOverflow.dto.TagDTO;
 import ro.utcn.sd.vasi.SnackOverflow.dto.UserDTO;
 import ro.utcn.sd.vasi.SnackOverflow.event.*;
 import ro.utcn.sd.vasi.SnackOverflow.exceptions.NotEnoughPermissionsException;
@@ -102,8 +103,8 @@ public class QuestionManagementService {
     }
 
     @Transactional
-    public List<String> listAllTags() {
-        return repositoryFactory.createTagRepository().findAll().stream().map(Object::toString).collect(Collectors.toList());
+    public List<TagDTO> listAllTags() {
+        return repositoryFactory.createTagRepository().findAll().stream().map(TagDTO::ofEntity).collect(Collectors.toList());
     }
 
     @Transactional

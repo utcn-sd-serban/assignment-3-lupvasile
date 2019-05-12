@@ -1,6 +1,6 @@
 import {EventEmitter} from "events";
-import RestClient from "../rest/RestClient";
 import WebSocketListener from "../ws/WebSocketListener";
+import RestClientFactory from "../rest/RestClientFactory";
 
 const makeUser = (id, username, password, score, isModerator, isBlocked) => ({
     id, username, password, score, isModerator, isBlocked
@@ -21,22 +21,22 @@ class Model extends EventEmitter {
             makeUser(2, "u2", "pass", 0, true, false),
             makeUser(3, "u3", "pass", 0, false, true)];
 
+        var currUserInd = 1;
+        this.client = new RestClientFactory(localUsers[currUserInd].username, localUsers[currUserInd].password);
+        this.listener = new WebSocketListener(localUsers[currUserInd].username, localUsers[currUserInd].password);
+        this.listener.on("event",e => webSocketListener(e));
+
         this.state = {
             users: localUsers,
 
-            currentUser: null,
+            currentUser: localUsers[1],
 
             loginUser: {
                 username: "",
                 password: ""
             },
 
-            questions: [makeQuestion(1, localUsers[0], "question 1", "ana are mere multe1",
-                "02/02/02", ["tag1", "tag2", "tag3"], 0),
-                makeQuestion(2, localUsers[1], "question 2", "ana are mere multe2",
-                    "02/01/02", ["tag2"], 4),
-                makeQuestion(3, localUsers[0], "question 3", "ana are mere multe3",
-                    "02/02/01", ["tag1"], -4)],
+            questions: [],
 
             newQuestion: {
                 title: "",
@@ -49,14 +49,11 @@ class Model extends EventEmitter {
                 text: "",
             },
 
-            tags: ["tag1", "tag2", "tag3"],
+            tags: [],
 
             questionSearchText: "",
 
-            answers: [makeAnswer(1, localUsers[0], "answer 1", "02/02/02", 1, 0),
-                makeAnswer(2, localUsers[1], "answer 2", "02/02/02", 1, 0),
-                makeAnswer(3, localUsers[0], "answer 3", "02/02/02", 1, 0)
-            ],
+            answers: [],
 
             newAnswer: {text: ""},
 
@@ -77,7 +74,7 @@ class Model extends EventEmitter {
         return this.state.answers.find(a => a.id === answerId);
     }
 
-    sendVoteAnswer(userId, answerId, voteType) {
+    sendVoteAnswerToLocalState(userId, answerId, voteType) {
         var answer = this.getAnswer(answerId);
         if (voteType) {
             answer.voteCount++;
@@ -92,16 +89,16 @@ class Model extends EventEmitter {
         this.emit("change", this.state);
     }
 
-    addAnswer(id, author, text, questionId) {
+    addAnswerToLocalState(id, author, text, questionId) {
         this.state = {
             ...this.state,
             answers: [makeAnswer(id, author, text, "04/05/29", questionId, 0)].concat(this.state.answers)
         };
-        debugger;
+
         this.emit("change", this.state);
     }
 
-    updateAnswerText(answerId, newText) {
+    updateAnswerTextToLocalState(answerId, newText) {
         var answer = this.getAnswer(answerId);
         if (answer === undefined) {
             return;
@@ -112,7 +109,7 @@ class Model extends EventEmitter {
         this.emit("change", this.state);
     }
 
-    deleteAnswer(answerId) {
+    deleteAnswerToLocalState(answerId) {
         this.state = {
             ...this.state,
             answers: this.state.answers.filter(a => a.id !== answerId),
@@ -150,16 +147,16 @@ class Model extends EventEmitter {
         this.emit("change", this.state);
     }
 
-    filterQuestionByTagCommaSeparated(tagText) {
+    filterQuestionByTagCommaSeparatedInLocalState(tagText) {
         var tags = tagText.trim().split(',');
         return this.filterQuestionsByTag(tags);
     }
 
-    filterQuestionsByTag(tags) {
+    filterQuestionsByTagInLocalState(tags) {
         return this.state.questions.filter(q => tags.every(t => q.tags.includes(t)));
     }
 
-    filterQuestionsByTitle(title) {
+    filterQuestionsByTitleInLocalState(title) {
         return this.state.questions.filter(q => q.title.includes(title));
     }
 
@@ -168,20 +165,20 @@ class Model extends EventEmitter {
         return res;
     }
 
-    addQuestion(id, author, title, text, tags) {
+    addQuestionToLocalState(id, author, title, text, tags) {
         this.state = {
             ...this.state,
             questions: [makeQuestion(id, author, title, text, "04/05/29", tags, 0)].concat(this.state.questions)
         };
 
-        this.state = {
+        /*this.state = {
             ...this.state,
             tags: this.makeTagsList()
-        };
+        };*/
         this.emit("change", this.state);
     }
 
-    updateQuestion(questionId, newTitle, newText) {
+    updateQuestionToLocalState(questionId, newTitle, newText) {
         var question = this.getQuestion(questionId);
         if (question === undefined) {
             return;
@@ -202,7 +199,7 @@ class Model extends EventEmitter {
         this.emit("change", this.state);
     }
 
-    deleteQuestion(questionId) {
+    deleteQuestionToLocalState(questionId) {
         this.state = {
             ...this.state,
             questions: this.state.questions.filter(q => q.id !== questionId),
@@ -210,7 +207,7 @@ class Model extends EventEmitter {
         this.emit("change", this.state);
     }
 
-    sendVote(userId, questionId, voteType) {
+    sendVoteQuestionToLocalState(userId, questionId, voteType) {
         var question = this.getQuestion(questionId);
         if (voteType) {
             question.voteCount++;
@@ -256,17 +253,17 @@ class Model extends EventEmitter {
     }
 
     makeTagsList() {
-        var allTags = [].concat.apply([], this.state.questions.map(q => q.tags));
+        var allTags = this.state.tags.concat.apply([], this.state.questions.map(q => q.tags));
         return Array.from(new Set(allTags)).sort();
     }
 
     makeLogin(username, password) {
-        this.client = new RestClient(username, password);
-        this.client.asdf(this.state.users[0]);
-        return this.client.loadCurrentLoggedUser().then(user => {
+        this.client = new RestClientFactory(username, password);
+        return this.client.createLoginClient().loadCurrentLoggedUser().then(user => {
             if (!user) return false;
 
             this.listener = new WebSocketListener(username,password);
+            this.listener.on("event", event => webSocketListener(event));
             this.state = {
                 ...this.state,
                 currentUser: user
@@ -292,4 +289,14 @@ class Model extends EventEmitter {
 
 const model = new Model();
 
+function webSocketListener(event) {
+    {
+        console.log(event.type.toString());
+        if (event.type === "STUDENT_CREATED") {
+            model.appendStudent(event.student);
+        }
+    }
+}
+
 export default model;
+export {makeQuestion};

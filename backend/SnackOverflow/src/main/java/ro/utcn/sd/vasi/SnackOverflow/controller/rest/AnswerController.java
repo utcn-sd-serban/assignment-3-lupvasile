@@ -14,7 +14,7 @@ public class AnswerController {
     private final AnswerManagementService answerManagementService;
     private final UserManagementService userManagementService;
 
-    @PostMapping("/questions/{questionId}")
+    @PostMapping("/questions/{questionId}/answers")
     public AnswerDTO addAnswer(@PathVariable int questionId, @RequestBody AnswerDTO answer) {
         return answerManagementService.addAnswer(userManagementService.loadCurrentUser().getId(),questionId,answer.getText());
     }

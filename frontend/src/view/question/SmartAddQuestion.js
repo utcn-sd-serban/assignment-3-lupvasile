@@ -17,6 +17,10 @@ export default class SmartAddQuestion extends Component {
         model.addListener("change", this.listener);
     }
 
+    componentWillMount() {
+        questionPresenter.onInitAddQuestion();
+    }
+
     componentWillUnmount() {
         model.removeListener("change", this.listener);
     }

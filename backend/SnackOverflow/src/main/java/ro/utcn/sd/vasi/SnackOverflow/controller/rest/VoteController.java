@@ -14,14 +14,14 @@ public class VoteController {
     private final UserManagementService userManagementService;
 
     //is put the appropiate method here?
-    @PutMapping("/questions/{questionId}/answers/{answerId}/votes")
-    public void voteAnswer(@PathVariable int answerId, @RequestBody int voteValue) {
+    @PostMapping("/questions/{questionId}/answers/{answerId}/votes/{voteValue}")
+    public boolean voteAnswer(@PathVariable int answerId, @PathVariable int voteValue) {
         boolean send = voteValue == 1;
-        answerManagementService.sendVote(userManagementService.loadCurrentUser().getId(),answerId,send);
+        return answerManagementService.sendVote(userManagementService.loadCurrentUser().getId(),answerId,send);
     }
 
-    @PutMapping("/questions/{questionId}/votes")
-    private void voteQuestion(@PathVariable int questionId, @RequestBody int voteValue) {
+    @PostMapping("/questions/{questionId}/votes/{voteValue}")
+    private void voteQuestion(@PathVariable int questionId, @PathVariable int voteValue) {
         boolean send = voteValue == 1;
         questionManagementService.sendVote(userManagementService.loadCurrentUser().getId(),questionId,send);
     }

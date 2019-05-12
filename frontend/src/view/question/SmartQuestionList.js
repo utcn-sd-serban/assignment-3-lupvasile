@@ -5,8 +5,8 @@ import QuestionList from "./QuestionList";
 
 const mapModelStateToComponentState = (modelState, props) => ({
     questions: (!props.match.params.hasOwnProperty("filterText")) ? modelState.questions
-        : props.match.params.filterType === "filterByTitle" ? model.filterQuestionsByTitle(props.match.params.filterText)
-            : model.filterQuestionByTagCommaSeparated(props.match.params.filterText),
+        : props.match.params.filterType === "filterByTitle" ? model.filterQuestionsByTitleInLocalState(props.match.params.filterText)
+            : model.filterQuestionByTagCommaSeparatedInLocalState(props.match.params.filterText),
     user: modelState.currentUser,
     questionSearchText: modelState.questionSearchText
 });
@@ -17,6 +17,10 @@ export default class SmartQuestionList extends Component {
         this.state = mapModelStateToComponentState(model.state, props);
         this.listener = modelState => this.setState(mapModelStateToComponentState(modelState, this.props));
         model.addListener("change", this.listener);
+    }
+
+    componentWillMount() {
+        questionPresenter.onInit();
     }
 
     componentDidUpdate(prev) {

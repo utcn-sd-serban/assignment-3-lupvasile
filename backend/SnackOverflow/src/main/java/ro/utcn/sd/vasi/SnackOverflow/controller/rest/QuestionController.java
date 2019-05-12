@@ -1,16 +1,16 @@
 package ro.utcn.sd.vasi.SnackOverflow.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import ro.utcn.sd.vasi.SnackOverflow.dto.QuestionDTO;
+import ro.utcn.sd.vasi.SnackOverflow.dto.TagDTO;
 import ro.utcn.sd.vasi.SnackOverflow.model.Tag;
 import ro.utcn.sd.vasi.SnackOverflow.services.QuestionManagementService;
 import ro.utcn.sd.vasi.SnackOverflow.services.UserManagementService;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,14 +30,15 @@ public class QuestionController {
         return questionManagementService.addQuestion(userManagementService.loadCurrentUser().getId(),question.getTitle(),question.getText(),tags);
     }
 
-    @GetMapping("/questions/findByTags")
-    public List<QuestionDTO> filterByTag(@RequestBody List<String> tagsAsString) {
-        Set<Tag> tags = tagsAsString.stream().map(Tag::new).collect(Collectors.toSet());
+    @GetMapping("/questions/findByTags/{tagsAsString}")
+    public List<QuestionDTO> filterByTag(@PathVariable String tagsAsString) {
+        Set<Tag> tags = Arrays.asList(tagsAsString.split(",")).stream().map(Tag::new).collect(Collectors.toSet());
         return questionManagementService.filterQuestionsByTag(tags);
     }
 
-    @GetMapping("/questions/findByTitle")
-    public List<QuestionDTO> handleFilterByTitle(@RequestBody String title) {
+    @GetMapping("/questions/findByTitle/{title}")
+    public List<QuestionDTO> handleFilterByTitle(@PathVariable String title) {
+        System.out.println("filtering with title: "+title);
         return questionManagementService.filterQuestionsByTitle(title);
     }
 
@@ -49,5 +50,10 @@ public class QuestionController {
     @DeleteMapping("/questions/{questionId}")
     public void deleteQuestion(@PathVariable int questionId) {
         questionManagementService.deleteQuestion(userManagementService.loadCurrentUser().getId(),questionId);
+    }
+
+    @GetMapping("/questions/tags")
+    public List<TagDTO> listTags() {
+        return questionManagementService.listAllTags();
     }
 }

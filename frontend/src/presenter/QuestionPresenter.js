@@ -1,15 +1,17 @@
 import model from "../model/model";
+import questionModel from "../model/questionModel";
+import answerModel from "../model/answerModel";
 
 class QuestionPresenter {
     onViewDetails(questionId) {
-        window.location.assign('#/question-details/' + questionId)
+        answerModel.loadAnswersForQuestion(questionId).then(() =>
+            window.location.assign('#/question-details/' + questionId));
     }
 
     onCreate() {
-        var newId = Math.max(...model.state.questions.map(q => q.id)) + 1;
         var question = model.state.newQuestion;
         var tags = question.tagsAsString.trim().split(',');
-        model.addQuestion(newId, model.state.currentUser, question.title, question.text, tags);
+        questionModel.addQuestion(question.title, question.text, tags);
         model.changeNewQuestionProperty("title", "");
         model.changeNewQuestionProperty("text", "");
         model.changeNewQuestionProperty("tagsAsString", "");
@@ -30,22 +32,26 @@ class QuestionPresenter {
 
     onSearchByTitle() {
         if (model.state.questionSearchText === "") {
+            questionModel.loadAllQuestions();
             window.location.assign('#/all-questions/');
         } else {
+            questionModel.loadFilteredByTitle(model.state.questionSearchText);
             window.location.assign('#all-questions/filterByTitle/' + model.state.questionSearchText);
         }
     }
 
     onSearchByTag() {
         if (model.state.questionSearchText === "") {
+            questionModel.loadAllQuestions();
             window.location.assign('#/all-questions/');
         } else {
+            questionModel.loadFilteredByTags(model.state.questionSearchText);
             window.location.assign('#all-questions/filterByTag/' + model.state.questionSearchText);
         }
     }
 
     onUpdate(questionId) {
-        model.updateQuestion(questionId, model.state.updateQuestion.title, model.state.updateQuestion.text);
+        questionModel.updateQuestion(questionId, model.state.updateQuestion.title, model.state.updateQuestion.text);
         model.changeUpdateQuestionProperty("title", "");
         model.changeUpdateQuestionProperty("text", "");
         window.location.assign('#/question-details/' + questionId);
@@ -53,7 +59,7 @@ class QuestionPresenter {
 
     onDelete(questionId) {
         window.location.assign('#/all-questions/')
-        model.deleteQuestion(questionId);
+        questionModel.deleteQuestion(questionId);
     }
 
     onEdit(questionId) {
@@ -62,11 +68,19 @@ class QuestionPresenter {
     }
 
     onVote(questionId, vote) {
-        if (vote > 0) {
-            model.sendVote(model.state.currentUser.id, questionId, true);
-        } else {
-            model.sendVote(model.state.currentUser.id, questionId, false);
-        }
+        questionModel.voteQuestion(questionId, vote);
+    }
+
+    onInit() {
+        questionModel.loadAllQuestions();
+    }
+
+    onInitDetails(questionId) {
+        answerModel.loadAnswersForQuestion(questionId);
+    }
+
+    onInitAddQuestion() {
+        questionModel.loadAllTags();
     }
 }
 

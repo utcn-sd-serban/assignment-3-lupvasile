@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import model from "../../model/model";
 import questionPresenter from "../../presenter/QuestionPresenter";
 import QuestionDetails from "./QuestionDetails";
+import answerPresenter from "../../presenter/AnswerPresenter";
+import answerModel from "../../model/answerModel";
 
 
 const mapModelStateToComponentState = (modelState, props) => ({
@@ -15,6 +17,10 @@ export default class SmartQuestionDetails extends Component {
         this.state = mapModelStateToComponentState(model.state, props);
         this.listener = modelState => this.setState(mapModelStateToComponentState(modelState, this.props));
         model.addListener("change", this.listener);
+    }
+
+    componentWillMount() {
+        answerModel.loadAnswersForQuestion(this.state.question.id);
     }
 
     componentDidUpdate(prev) {

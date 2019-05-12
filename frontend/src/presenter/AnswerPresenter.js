@@ -1,4 +1,6 @@
 import model from "../model/model";
+import questionModel from "../model/questionModel";
+import answerModel from "../model/answerModel";
 
 class AnswerPresenter {
     onViewDetails(answerId) {
@@ -6,9 +8,8 @@ class AnswerPresenter {
     }
 
     onCreate(questionId) {
-        var newId = Math.max(...model.state.answers.map(q => q.id)) + 1;
         var answer = model.state.newAnswer;
-        model.addAnswer(newId, model.state.currentUser, answer.text, questionId);
+        answerModel.addAnswer(answer.text, questionId);
         model.changeNewAnswerProperty("text", "");
     }
 
@@ -21,13 +22,13 @@ class AnswerPresenter {
     }
 
     onUpdate(answerId) {
-        model.updateAnswerText(answerId, model.state.updateAnswer.text);
+        answerModel.updateAnswer(answerId, model.state.updateAnswer.text);
         model.changeUpdateAnswerProperty("text", "");
         window.location.assign('#/question-details/' + model.getAnswer(answerId).questionId);
     }
 
     onDelete(answerId) {
-        model.deleteAnswer(answerId);
+        answerModel.deleteAnswer(answerId);
     }
 
     onEdit(answerId) {
@@ -36,11 +37,11 @@ class AnswerPresenter {
     }
 
     onVote(answerId, vote) {
-        if (vote > 0) {
-            model.sendVoteAnswer(model.state.currentUser.id, answerId, true);
-        } else {
-            model.sendVoteAnswer(model.state.currentUser.id, answerId, false);
-        }
+        answerModel.voteAnswer(answerId, vote);
+    }
+
+    onInit(questionId) {
+        answerModel.loadAnswersForQuestion(questionId);
     }
 }
 
