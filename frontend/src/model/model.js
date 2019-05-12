@@ -325,7 +325,7 @@ function webSocketListener(event) {
 
             case "USER_BANNED":
                 model.banUserToLocalState(event.userId);
-
+                break;
         }
     }
 }
