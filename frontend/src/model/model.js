@@ -1,6 +1,7 @@
 import {EventEmitter} from "events";
 import WebSocketListener from "../ws/WebSocketListener";
 import RestClientFactory from "../rest/RestClientFactory";
+import LoadAnswersForQuestionCommand from "../command/answerCommands";
 
 const makeUser = (id, username, password, score, isModerator, isBlocked) => ({
     id, username, password, score, isModerator, isBlocked
@@ -29,7 +30,7 @@ class Model extends EventEmitter {
         this.state = {
             users: localUsers,
 
-            currentUser: null,//[1],
+            currentUser: localUsers[1],
 
             loginUser: {
                 username: "",
@@ -339,4 +340,3 @@ function webSocketListener(event) {
 }
 
 export default model;
-export {makeQuestion};

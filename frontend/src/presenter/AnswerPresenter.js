@@ -1,5 +1,6 @@
 import model from "../model/model";
-import questionModel from "../model/questionModel";
+import invoker from "../command/invoker"
+import {AddAnswerCommand, DeleteAnswerCommand, UpdateAnswerCommand, VoteAnswerCommand} from "../command/answerCommands";
 import answerModel from "../model/answerModel";
 
 class AnswerPresenter {
@@ -9,7 +10,7 @@ class AnswerPresenter {
 
     onCreate(questionId) {
         var answer = model.state.newAnswer;
-        answerModel.addAnswer(answer.text, questionId);
+        invoker.invoke(new AddAnswerCommand(answer.text, questionId));
         model.changeNewAnswerProperty("text", "");
     }
 
@@ -22,13 +23,13 @@ class AnswerPresenter {
     }
 
     onUpdate(answerId) {
-        answerModel.updateAnswer(answerId, model.state.updateAnswer.text);
+        invoker.invoke(new UpdateAnswerCommand(answerId, model.state.updateAnswer.text));
         model.changeUpdateAnswerProperty("text", "");
         window.location.assign('#/question-details/' + model.getAnswer(answerId).questionId);
     }
 
     onDelete(answerId) {
-        answerModel.deleteAnswer(answerId);
+        invoker.invoke(new DeleteAnswerCommand(answerId));
     }
 
     onEdit(answerId) {
@@ -37,7 +38,7 @@ class AnswerPresenter {
     }
 
     onVote(answerId, vote) {
-        answerModel.voteAnswer(answerId, vote);
+        invoker.invoke(new VoteAnswerCommand(answerId, vote));
     }
 
     onInit(questionId) {

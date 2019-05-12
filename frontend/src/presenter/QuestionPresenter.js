@@ -1,6 +1,13 @@
 import model from "../model/model";
 import questionModel from "../model/questionModel";
 import answerModel from "../model/answerModel";
+import {
+    AddQuestionCommand,
+    DeleteQuestionCommand,
+    UpdateQuestionCommand,
+    VoteQuestionCommand
+} from "../command/questionCommands";
+import invoker from "../command/invoker"
 
 class QuestionPresenter {
     onViewDetails(questionId) {
@@ -11,7 +18,7 @@ class QuestionPresenter {
     onCreate() {
         var question = model.state.newQuestion;
         var tags = question.tagsAsString.trim().split(',');
-        questionModel.addQuestion(question.title, question.text, tags);
+        invoker.invoke(new AddQuestionCommand(question.title, question.text, tags));
         model.changeNewQuestionProperty("title", "");
         model.changeNewQuestionProperty("text", "");
         model.changeNewQuestionProperty("tagsAsString", "");
@@ -51,7 +58,7 @@ class QuestionPresenter {
     }
 
     onUpdate(questionId) {
-        questionModel.updateQuestion(questionId, model.state.updateQuestion.title, model.state.updateQuestion.text);
+        invoker.invoke(new UpdateQuestionCommand(questionId, model.state.updateQuestion.title, model.state.updateQuestion.text));
         model.changeUpdateQuestionProperty("title", "");
         model.changeUpdateQuestionProperty("text", "");
         window.location.assign('#/question-details/' + questionId);
@@ -59,7 +66,7 @@ class QuestionPresenter {
 
     onDelete(questionId) {
         window.location.assign('#/all-questions/')
-        questionModel.deleteQuestion(questionId);
+        invoker.invoke(new DeleteQuestionCommand(questionId));
     }
 
     onEdit(questionId) {
@@ -68,7 +75,7 @@ class QuestionPresenter {
     }
 
     onVote(questionId, vote) {
-        questionModel.voteQuestion(questionId, vote);
+        invoker.invoke(new VoteQuestionCommand(questionId, vote));
     }
 
     onInitAllQuestions() {
