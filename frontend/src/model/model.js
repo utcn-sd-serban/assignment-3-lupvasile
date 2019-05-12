@@ -29,7 +29,7 @@ class Model extends EventEmitter {
         this.state = {
             users: localUsers,
 
-            currentUser: localUsers[1],
+            currentUser: null,//[1],
 
             loginUser: {
                 username: "",
@@ -242,6 +242,9 @@ class Model extends EventEmitter {
         return this.client.createLoginClient().loadCurrentLoggedUser().then(user => {
             if (!user) return false;
 
+            if(this.hasOwnProperty("listener")) {
+                delete this.listener.client.deactivate();
+            }
             this.listener = new WebSocketListener(username, password);
             this.listener.on("event", event => webSocketListener(event));
             this.state = {
