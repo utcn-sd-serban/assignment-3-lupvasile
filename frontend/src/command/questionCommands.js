@@ -49,7 +49,10 @@ class DeleteQuestionCommand {
     }
 
     undo() {
-        return questionModel.addQuestion(this.deletedQuestion.title, this.deletedQuestion.text, this.deletedQuestion.tags);
+        return questionModel.addQuestion(this.deletedQuestion.title, this.deletedQuestion.text, this.deletedQuestion.tags).then(q => {
+            this.questionId = q.id;
+            return q;
+        });
     }
 }
 

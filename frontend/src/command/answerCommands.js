@@ -46,7 +46,10 @@ class DeleteAnswerCommand {
     }
 
     undo() {
-        return answerModel.addAnswer(this.deletedAnswer.text, this.deletedAnswer.questionId);
+        return answerModel.addAnswer(this.deletedAnswer.text, this.deletedAnswer.questionId).then(ans => {
+            this.answerId = ans.id;
+            return ans;
+        });
     }
 }
 
